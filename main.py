@@ -25,8 +25,7 @@ input_shape = (features,)
 print(f'Feature shape: {input_shape}')
 # Create the model
 model = Sequential()
-model.add(Dense(350, input_shape=input_shape, activation='relu'))
-model.add(Dense(50, activation='relu'))
+model.add(Dense(784, input_shape=input_shape, activation='relu'))
 model.add(Dense(classes, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy', 'mse'])
 
