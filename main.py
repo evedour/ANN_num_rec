@@ -30,7 +30,7 @@ input_shape = (features,)
 print(f'Feature shape: {input_shape}')
 # Create the model
 model = Sequential()
-model.add(Dense(794, input_shape=input_shape, activation='relu'))
+model.add(Dense(10, input_shape=input_shape, activation='relu'))
 model.add(Dense(classes, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy', 'mse'])
 
@@ -44,15 +44,15 @@ for train, test in kfold.split(x_train):
     history = model.fit(xi_train, yi_train, epochs=10, batch_size=250, verbose=1, validation_split=0.2)
     #plots
     #accuracy
-    #plt.plot(history.history['accuracy'], history.history['val_accuracy'])
-    #plt.ylabel('acc')
-    #plt.xlabel('epoch')
+    plt.plot(history.history['val_accuracy'])
+    plt.ylabel('acc')
+    plt.xlabel('epoch')
 
     #loss
-    plt.plot(history.history['loss'], history.history['val_loss'])
-    plt.ylabel('loss')
-    plt.xlabel('epoch')
-    plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+    #plt.plot(history.history['val_loss'])
+    #plt.ylabel('loss')
+    #plt.xlabel('epoch')
+    #plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
 
     #Test the model after training
     test_results = model.evaluate(xi_test, yi_test, verbose=1)
