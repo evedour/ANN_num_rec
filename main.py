@@ -7,6 +7,9 @@ from sklearn.model_selection import KFold
 
 features = 784
 classes = 10
+entropy_sum = 0
+acc_sum = 0
+mse_sum = 0
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 x_train = x_train.reshape(x_train.shape[0], features)
@@ -40,3 +43,8 @@ for train, test in kfold.split(x_train):
     #Test the model after training
     test_results = model.evaluate(xi_test, yi_test, verbose=1)
     print(f'Test results in fold # {fold} - Loss: {test_results[0]} - Accuracy: {test_results[1]}% - MSE {test_results[2]}')
+    entropy_sum += test_results[0]
+    acc_sum += test_results[1]
+    mse_sum += test_results[2]
+
+print(f'Results sum - Loss {entropy_sum}= Accuracy {acc_sum}%- MSE{mse_sum}')
