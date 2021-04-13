@@ -66,4 +66,4 @@ for train, test in kfold.split(x_train):
     mse_sum += test_results[2]
 
 plt.show()
-print(f'Results sum - Loss {entropy_sum} - Accuracy {acc_sum}%- MSE {mse_sum}')
+print(f'Results sum - Loss {entropy_sum/5} - Accuracy {acc_sum/5}%- MSE {mse_sum/5}')

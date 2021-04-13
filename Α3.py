@@ -32,7 +32,7 @@ print(f'Feature shape: {input_shape}')
 model = Sequential()
 model.add(Dense(794, input_shape=input_shape, activation='relu'))
 model.add(Dense(classes, activation='softmax'))
-opt = tensorflow.keras.optimizers.SGD(lr=0.001, momentum=0.2, decay=0.0, nesterov=False)
+opt = tensorflow.keras.optimizers.SGD(lr=0.1, momentum=0.6, decay=0.0, nesterov=False)
 model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy', 'mse'])
 
 fold = 1
@@ -45,14 +45,14 @@ for train, test in kfold.split(x_train):
     history = model.fit(xi_train, yi_train, epochs=10, batch_size=250, verbose=1, validation_split=0.2)
     #plots
     #accuracy
-    plt.plot(history.history['val_accuracy'])
-    plt.ylabel('acc')
-    plt.xlabel('epoch')
+    #plt.plot(history.history['val_accuracy'])
+    #plt.ylabel('acc')
+    #plt.xlabel('epoch')
 
     #loss
-    #plt.plot(history.history['val_loss'])
-    #plt.ylabel('loss')
-    #plt.xlabel('epoch')
+    plt.plot(history.history['val_loss'])
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
 
     plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
 
@@ -66,4 +66,4 @@ for train, test in kfold.split(x_train):
     mse_sum += test_results[2]
 
 plt.show()
-print(f'Results sum - Loss {entropy_sum} - Accuracy {acc_sum}%- MSE {mse_sum}')
+print(f'Results sum - Loss {entropy_sum/5} - Accuracy {acc_sum/5}%- MSE {mse_sum/5}')

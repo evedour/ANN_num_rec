@@ -44,9 +44,9 @@ for train, test in kfold.split(x_train):
     history = model.fit(xi_train, yi_train, epochs=10, batch_size=250, verbose=1, validation_split=0.2)
     #plots
     #accuracy
-    plt.plot(history.history['val_accuracy'])
-    plt.ylabel('acc')
-    plt.xlabel('epoch')
+    #plt.plot(history.history['val_accuracy'])
+    #plt.ylabel('acc')
+    #plt.xlabel('epoch')
 
     #loss
     #plt.plot(history.history['val_loss'])
@@ -65,4 +65,4 @@ for train, test in kfold.split(x_train):
     mse_sum += test_results[2]
 
 plt.show()
-print(f'Results sum - Loss {entropy_sum} - Accuracy {acc_sum}%- MSE {mse_sum}')
+print(f'Results sum - Loss {entropy_sum/5} - Accuracy {acc_sum/5}%- MSE {mse_sum/5}')
