@@ -48,7 +48,7 @@ for train, test in kfold.split(x_train):
     yi_train, yi_test = y_train[train], y_train[test]
     print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
 
-    history = model.fit(xi_train, yi_train, epochs=50, batch_size=250, verbose=1, validation_split=0.2)
+    history = model.fit(xi_train, yi_train, epochs=10, batch_size=250, verbose=1, validation_split=0.2)
     #plots
     #accuracy
     plt_acc=plt.figure(1)
