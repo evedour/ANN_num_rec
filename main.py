@@ -30,8 +30,11 @@ input_shape = (features,)
 print(f'Feature shape: {input_shape}')
 # Create the model
 model = Sequential()
+#add the hidden layer
 model.add(Dense(442, input_shape=input_shape, activation='relu'))
+#add output layer
 model.add(Dense(classes, activation='softmax'))
+#set the metrics
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy', 'mse'])
 
 fold = 1
@@ -41,7 +44,7 @@ for train, test in kfold.split(x_train):
     yi_train, yi_test = y_train[train], y_train[test]
     print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
 
-    history = model.fit(xi_train, yi_train, epochs=500, batch_size=250, verbose=1, validation_split=0.2)
+    history = model.fit(xi_train, yi_train, epochs=10, batch_size=250, verbose=1, validation_split=0.2)
     #plots
     #accuracy
     plot_acc = plt.figure(1)
