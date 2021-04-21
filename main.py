@@ -28,21 +28,21 @@ y_test = to_categorical(y_test, classes)
 
 input_shape = (features,)
 print(f'Feature shape: {input_shape}')
-# Create the model
+# Create the models
 model = Sequential()
+model2 = Sequential()
 #add the hidden layer
-model.add(Dense(794, input_shape=input_shape, activation='relu'))
+model.add(Dense(397, input_shape=input_shape, activation='relu'))
+model2.add(Dense(397, input_shape=input_shape, activation='relu'))
 #add output layer
 model.add(Dense(classes, activation='softmax'))
-#define loss fn
-loss_fn = tensorflow.keras.losses.SparseCategoricalCrossentropy()
+model2.add(Dense(classes, activation='softmax'))
 #compile
 
 #crossentropy
-#model.compile(loss='cross_entropy', optimizer='adam', metrics=['accuracy'])
-
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 #mse
-model.compile(loss='mean_squared_error',optimizer='adam', metrics=['accuracy'])
+model2.compile(loss='mean_squared_error',optimizer='adam', metrics=['accuracy'])
 
 fold = 1
 kfold = KFold(5, shuffle=True, random_state=1)
@@ -55,7 +55,7 @@ for train, test in kfold.split(x_train):
     #plots
     #accuracy
     plot_acc = plt.figure(1)
-    plt.title('Validation Accuracy', loc='center', pad=None)
+    plt.title('Validation Accuracy, Crossentropy Model', loc='center', pad=None)
     plt.plot(history.history['val_accuracy'])
     plt.ylabel('acc')
     plt.xlabel('epoch')
@@ -63,7 +63,7 @@ for train, test in kfold.split(x_train):
 
     #loss
     plot_loss = plt.figure(2)
-    plt.title('Validation Loss', loc='center', pad=None)
+    plt.title('Validation Loss, Crossentropy Model', loc='center', pad=None)
     plt.plot(history.history['val_loss'])
     plt.ylabel('loss')
     plt.xlabel('epoch')
@@ -71,7 +71,7 @@ for train, test in kfold.split(x_train):
 
     #train loss
     plot_val = plt.figure(3)
-    plt.title('Training Loss', loc='center', pad=None)
+    plt.title('Training Loss,Crossentropy Model ', loc='center', pad=None)
     plt.plot(history.history['loss'])
     plt.ylabel('loss')
     plt.xlabel('epoch')
@@ -85,4 +85,57 @@ for train, test in kfold.split(x_train):
     loss_sum += test_results[0]
     acc_sum += test_results[1]
 plt.show()
-print(f'Results sum - Loss {loss_sum/5} - Accuracy {acc_sum/5}')
+print(f'Results sum (Crossentropy)- Loss {loss_sum/5} - Accuracy {acc_sum/5}')
+print(f'Continue to MSE model?')
+ans = input()
+while ans != '1':
+    ans = input()
+
+print(f'Clearing session....')
+tensorflow.keras.backend.clear_session()
+loss_sum = 0
+acc_sum = 0
+fold = 1
+kfold = KFold(5, shuffle=True, random_state=1)
+for train, test in kfold.split(x_train):
+    xi_train, xi_test = x_train[train], x_train[test]
+    yi_train, yi_test = y_train[train], y_train[test]
+    print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
+
+    history2 = model2.fit(xi_train, yi_train, epochs=10, batch_size=200, verbose=1, validation_data=(xi_test, yi_test))
+    #plots
+    #accuracy
+    plot_acc = plt.figure(1)
+    plt.title('Validation Accuracy,MSE Model', loc='center', pad=None)
+    plt.plot(history2.history['val_accuracy'])
+    plt.ylabel('acc')
+    plt.xlabel('epoch')
+    plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+
+    #loss
+    plot_loss = plt.figure(2)
+    plt.title('Validation Loss,MSE Model ', loc='center', pad=None)
+    plt.plot(history2.history['val_loss'])
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+
+    #train loss
+    plot_val = plt.figure(3)
+    plt.title('Training Loss,MSE Model ', loc='center', pad=None)
+    plt.plot(history2.history['loss'])
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+
+    #Test the model after training
+    test_results2 = model2.evaluate(x_test, y_test, verbose=1)
+    print(f'Test results in fold # {fold} - Loss: {test_results2[0]} - Accuracy: {test_results2[1]}')
+    fold = fold + 1
+    #save 5-fold cv results
+    loss_sum += test_results2[0]
+    acc_sum += test_results2[1]
+plt.show()
+print(f'Results sum (MSE) - Loss {loss_sum/5} - Accuracy {acc_sum/5}')
+print(f'Clearing session....')
+tensorflow.keras.backend.clear_session()
