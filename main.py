@@ -31,7 +31,7 @@ print(f'Feature shape: {input_shape}')
 # Create the model
 model = Sequential()
 #add the hidden layer
-model.add(Dense(442, input_shape=input_shape, activation='relu'))
+model.add(Dense(794, input_shape=input_shape, activation='relu'))
 #add output layer
 model.add(Dense(classes, activation='softmax'))
 #set the metrics

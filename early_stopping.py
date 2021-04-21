@@ -35,8 +35,8 @@ input_shape = (features,)
 print(f'Feature shape: {input_shape}')
 # Create the model
 model = Sequential()
-model.add(Dense(442, input_shape=input_shape, activation='relu'))
-model.add(Dense(316, activation='relu'))
+model.add(Dense(794, input_shape=input_shape, activation='relu'))
+model.add(Dense(10, activation='relu'))
 model.add(Dense(classes, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy', 'mse'])
 
@@ -59,6 +59,14 @@ for train, test in kfold.split(x_train):
     #loss
     plt_loss = plt.figure(2)
     plt.plot(history.history['val_loss'])
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+
+    # train loss
+    plot_val = plt.figure(3)
+    plt.title('Training Loss', loc='center', pad=None)
+    plt.plot(history.history['loss'])
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')

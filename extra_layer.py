@@ -35,8 +35,8 @@ input_shape = (features,)
 print(f'Feature shape: {input_shape}')
 # Create the model
 model = Sequential()
-model.add(Dense(442, input_shape=input_shape, activation='relu'))
-model.add(Dense(397, activation='relu'))
+model.add(Dense(794, input_shape=input_shape, activation='relu'))
+model.add(Dense(10, activation='relu'))
 model.add(Dense(classes, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy', 'mse'])
 
@@ -62,6 +62,13 @@ for train, test in kfold.split(x_train):
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+    # train loss
+    plot_val = plt.figure(3)
+    plt.title('Training Loss', loc='center', pad=None)
+    plt.plot(history.history['loss'])
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
 
     #Test the model after training
     test_results = model.evaluate(xi_test, yi_test, verbose=1)
@@ -72,5 +79,7 @@ for train, test in kfold.split(x_train):
     acc_sum += test_results[1]
     mse_sum += test_results[2]
 
+
 plt.show()
 print(f'Results sum - Loss {entropy_sum/5} - Accuracy {acc_sum/5}%- MSE {mse_sum/5}')
+tensorflow.keras.backend.clear_session()

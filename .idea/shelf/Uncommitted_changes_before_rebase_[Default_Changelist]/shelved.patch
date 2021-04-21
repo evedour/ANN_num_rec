@@ -1,0 +1,46 @@
+Index: main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import tensorflow\r\nimport matplotlib.pyplot as plt\r\nfrom tensorflow.keras.datasets import mnist\r\nfrom tensorflow.keras.models import Sequential\r\nfrom tensorflow.keras.layers import Dense\r\nfrom tensorflow.keras.utils import to_categorical\r\nfrom sklearn.model_selection import KFold\r\nfrom tensorflow.keras.utils import plot_model\r\n\r\nfeatures = 784\r\nclasses = 10\r\nentropy_sum = 0\r\nacc_sum = 0\r\nmse_sum = 0\r\n\r\n(x_train, y_train), (x_test, y_test) = mnist.load_data()\r\nx_train = x_train.reshape(x_train.shape[0], features)\r\nx_test = x_test.reshape(x_test.shape[0], features)\r\n\r\n#normalize\r\nx_train = x_train.astype('float32')\r\nx_test = x_test.astype('float32')\r\nx_train /= 255\r\nx_test /= 255\r\n#labels\r\ny_train = to_categorical(y_train, classes)\r\ny_test = to_categorical(y_test, classes)\r\n\r\ninput_shape = (features,)\r\nprint(f'Feature shape: {input_shape}')\r\n# Create the model\r\nmodel = Sequential()\r\n#add the hidden layer\r\nmodel.add(Dense(442, input_shape=input_shape, activation='relu'))\r\n#add output layer\r\nmodel.add(Dense(classes, activation='softmax'))\r\n#set the metrics\r\nmodel.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy', 'mse'])\r\n\r\nfold = 1\r\nkfold = KFold(5, shuffle=True, random_state=1)\r\nfor train, test in kfold.split(x_train):\r\n    xi_train, xi_test = x_train[train], x_train[test]\r\n    yi_train, yi_test = y_train[train], y_train[test]\r\n    print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')\r\n\r\n    history = model.fit(xi_train, yi_train, epochs=10, batch_size=250, verbose=1, validation_split=0.2)\r\n    #plots\r\n    #accuracy\r\n    plot_acc = plt.figure(1)\r\n    plt.plot(history.history['val_accuracy'])\r\n    plt.ylabel('acc')\r\n    plt.xlabel('epoch')\r\n\r\n    #loss\r\n    plot_loss = plt.figure(2)\r\n    plt.plot(history.history['val_loss'])\r\n    plt.ylabel('loss')\r\n    plt.xlabel('epoch')\r\n\r\n    plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')\r\n\r\n    #Test the model after training\r\n    test_results = model.evaluate(xi_test, yi_test, verbose=1)\r\n    print(f'Test results in fold # {fold} - Loss: {test_results[0]} - Accuracy: {test_results[1]}% - MSE {test_results[2]}')\r\n    fold = fold + 1\r\n    #save 5-fold cv results\r\n    entropy_sum += test_results[0]\r\n    acc_sum += test_results[1]\r\n    mse_sum += test_results[2]\r\n\r\nplt.show()\r\nprint(f'Results sum - Loss {entropy_sum/5} - Accuracy {acc_sum/5}%- MSE {mse_sum/5}')\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.py b/main.py
+--- a/main.py	(revision 6ea02efacd88b695bde3bdeed8f51a94f8b8da86)
++++ b/main.py	(date 1618986003318)
+@@ -48,20 +48,33 @@
+     #plots
+     #accuracy
+     plot_acc = plt.figure(1)
++    plt.title('Validation Accuracy', loc='center', pad=None)
+     plt.plot(history.history['val_accuracy'])
+     plt.ylabel('acc')
+     plt.xlabel('epoch')
++    plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+ 
+     #loss
+     plot_loss = plt.figure(2)
++    plt.title('Validation Loss', loc='center', pad=None)
+     plt.plot(history.history['val_loss'])
+     plt.ylabel('loss')
+     plt.xlabel('epoch')
++    #plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
++    plt.legend('validation', loc='upper left')
+ 
+-    plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+-
++    #train loss
++    #plot_val = plt.figure(3)
++    plt.title('Training Loss', loc='center', pad=None)
++    plt.plot(history.history['loss'])
++    plt.ylabel('loss')
++    plt.xlabel('epoch')
++    # plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
++    plt.legend('train', loc='upper left')
+     #Test the model after training
+     test_results = model.evaluate(xi_test, yi_test, verbose=1)
++    plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
++
+     print(f'Test results in fold # {fold} - Loss: {test_results[0]} - Accuracy: {test_results[1]}% - MSE {test_results[2]}')
+     fold = fold + 1
+     #save 5-fold cv results
