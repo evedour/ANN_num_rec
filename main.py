@@ -44,7 +44,7 @@ for train, test in kfold.split(x_train):
     yi_train, yi_test = y_train[train], y_train[test]
     print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
 
-    history = model.fit(xi_train, yi_train, epochs=10, batch_size=250, verbose=1, validation_split=0.2)
+    history = model.fit(xi_train, yi_train, epochs=10, batch_size=200, verbose=1, validation_data=(xi_test, yi_test))
     #plots
     #accuracy
     plot_acc = plt.figure(1)
@@ -71,9 +71,7 @@ for train, test in kfold.split(x_train):
     plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
 
     #Test the model after training
-    test_results = model.evaluate(xi_test, yi_test, verbose=1)
-    plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
-
+    test_results = model.evaluate(x_test, y_test, verbose=1)
     print(f'Test results in fold # {fold} - Loss: {test_results[0]} - Accuracy: {test_results[1]}% - MSE {test_results[2]}')
     fold = fold + 1
     #save 5-fold cv results
