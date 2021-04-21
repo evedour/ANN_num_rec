@@ -18,7 +18,7 @@ classes = 10
 entropy_sum = 0
 acc_sum = 0
 mse_sum = 0
-
+#reshape and prepare data
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 x_train = x_train.reshape(x_train.shape[0], features)
 x_test = x_test.reshape(x_test.shape[0], features)
