@@ -17,7 +17,7 @@ classes = 10
 entropy_sum = 0
 acc_sum = 0
 mse_sum = 0
-
+#reshape and prepare data
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 x_train = x_train.reshape(x_train.shape[0], features)
 x_test = x_test.reshape(x_test.shape[0], features)
@@ -35,8 +35,8 @@ input_shape = (features,)
 print(f'Feature shape: {input_shape}')
 # Create the model
 model = Sequential()
-model.add(Dense(442, input_shape=input_shape, activation='relu'))
-model.add(Dense(316, activation='relu'))
+model.add(Dense(794, input_shape=input_shape, activation='relu'))
+model.add(Dense(10, activation='relu'))
 model.add(Dense(classes, activation='softmax'))
 opt = tensorflow.keras.optimizers.SGD(lr=0.1, momentum=0.6, decay=0.0, nesterov=False)
 model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy', 'mse'])
@@ -48,7 +48,7 @@ for train, test in kfold.split(x_train):
     yi_train, yi_test = y_train[train], y_train[test]
     print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
 
-    history = model.fit(xi_train, yi_train, epochs=10, batch_size=250, verbose=1, validation_split=0.2)
+    history = model.fit(xi_train, yi_train, epochs=50, batch_size=250, verbose=1, validation_split=0.2, callbacks=[tensorflow.keras.callbacks.EarlyStopping(monitor="val_loss", patience=2)])
     #plots
     #accuracy
     plt_acc=plt.figure(1)
@@ -60,6 +60,14 @@ for train, test in kfold.split(x_train):
     #loss
     plt_loss=plt.figure(2)
     plt.plot(history.history['val_loss'])
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+
+    # train loss
+    plot_val = plt.figure(3)
+    plt.title('Training Loss', loc='center', pad=None)
+    plt.plot(history.history['loss'])
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')

@@ -11,12 +11,13 @@ from tensorflow.keras.utils import plot_model
 physical_devices = tensorflow.config.experimental.list_physical_devices('GPU')
 print("Num GPUs Available", len(tensorflow.config.experimental.list_physical_devices('GPU')))
 tensorflow.config.experimental.set_memory_growth(physical_devices[0], True)
+
 features = 784
 classes = 10
 entropy_sum = 0
 acc_sum = 0
 mse_sum = 0
-
+#reshape and prepare data
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 x_train = x_train.reshape(x_train.shape[0], features)
 x_test = x_test.reshape(x_test.shape[0], features)
@@ -34,8 +35,8 @@ input_shape = (features,)
 print(f'Feature shape: {input_shape}')
 # Create the model
 model = Sequential()
-model.add(Dense(442, input_shape=input_shape, activation='relu'))
-model.add(Dense(397, activation='relu'))
+model.add(Dense(794, input_shape=input_shape, activation='relu'))
+model.add(Dense(10, activation='relu'))
 model.add(Dense(classes, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy', 'mse'])
 
@@ -61,6 +62,13 @@ for train, test in kfold.split(x_train):
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+    # train loss
+    plot_val = plt.figure(3)
+    plt.title('Training Loss', loc='center', pad=None)
+    plt.plot(history.history['loss'])
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
 
     #Test the model after training
     test_results = model.evaluate(xi_test, yi_test, verbose=1)
@@ -71,5 +79,7 @@ for train, test in kfold.split(x_train):
     acc_sum += test_results[1]
     mse_sum += test_results[2]
 
+
 plt.show()
 print(f'Results sum - Loss {entropy_sum/5} - Accuracy {acc_sum/5}%- MSE {mse_sum/5}')
+tensorflow.keras.backend.clear_session()
