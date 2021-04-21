@@ -12,7 +12,7 @@ classes = 10
 entropy_sum = 0
 acc_sum = 0
 mse_sum = 0
-
+#reshape and prepare data
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 x_train = x_train.reshape(x_train.shape[0], features)
 x_test = x_test.reshape(x_test.shape[0], features)
@@ -48,20 +48,32 @@ for train, test in kfold.split(x_train):
     #plots
     #accuracy
     plot_acc = plt.figure(1)
+    plt.title('Validation Accuracy', loc='center', pad=None)
     plt.plot(history.history['val_accuracy'])
     plt.ylabel('acc')
     plt.xlabel('epoch')
+    plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
 
     #loss
     plot_loss = plt.figure(2)
+    plt.title('Validation Loss', loc='center', pad=None)
     plt.plot(history.history['val_loss'])
     plt.ylabel('loss')
     plt.xlabel('epoch')
+    plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
 
+    #train loss
+    plot_val = plt.figure(3)
+    plt.title('Training Loss', loc='center', pad=None)
+    plt.plot(history.history['loss'])
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
     plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
 
     #Test the model after training
     test_results = model.evaluate(xi_test, yi_test, verbose=1)
+    plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+
     print(f'Test results in fold # {fold} - Loss: {test_results[0]} - Accuracy: {test_results[1]}% - MSE {test_results[2]}')
     fold = fold + 1
     #save 5-fold cv results
