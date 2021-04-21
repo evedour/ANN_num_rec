@@ -14,9 +14,8 @@ tensorflow.config.experimental.set_memory_growth(physical_devices[0], True)
 
 features = 784
 classes = 10
-entropy_sum = 0
+loss_sum = 0
 acc_sum = 0
-mse_sum = 0
 #reshape and prepare data
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 x_train = x_train.reshape(x_train.shape[0], features)
@@ -38,7 +37,13 @@ model = Sequential()
 model.add(Dense(794, input_shape=input_shape, activation='relu'))
 model.add(Dense(10, activation='relu'))
 model.add(Dense(classes, activation='softmax'))
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy', 'mse'])
+#compile
+
+#crossentropy
+#model.compile(loss='cross_entropy', optimizer='adam', metrics=['accuracy'])
+
+#mse
+model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
 
 fold = 1
 kfold = KFold(5, shuffle=True, random_state=1)
@@ -75,11 +80,10 @@ for train, test in kfold.split(x_train):
     print(f'Test results in fold # {fold} - Loss: {test_results[0]} - Accuracy: {test_results[1]}% - MSE {test_results[2]}')
     fold = fold + 1
     #save 5-fold cv results
-    entropy_sum += test_results[0]
+    loss_sum += test_results[0]
     acc_sum += test_results[1]
-    mse_sum += test_results[2]
 
 
 plt.show()
-print(f'Results sum - Loss {entropy_sum/5} - Accuracy {acc_sum/5}%- MSE {mse_sum/5}')
+print(f'Results sum - Loss {loss_sum/5} - Accuracy {acc_sum/5}')
 tensorflow.keras.backend.clear_session()
