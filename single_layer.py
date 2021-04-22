@@ -1,6 +1,7 @@
 import directories
 import tensorflow
 import sys
+import os
 import matplotlib.pyplot as plt
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
@@ -78,7 +79,7 @@ def single_layer():
             #plots
             #accuracy
             plot_acc = plt.figure()
-            title = 'Validation Accuracy,Crossentropy Model {}:10'.format(h_1)
+            title = 'Validation Accuracy Crossentropy Model {}-10'.format(h_1)
             plt.title(title, loc='center', pad=None)
             plt.plot(CE_history.history['val_accuracy'])
             plt.ylabel('acc')
@@ -90,7 +91,7 @@ def single_layer():
 
             #loss
             plot_loss = plt.figure()
-            title ='Validation Loss,Crossentropy Model {}:10'.format(h_1)
+            title ='Validation Loss Crossentropy Model {}-10'.format(h_1)
             plt.title(title, loc='center', pad=None)
             plt.plot(CE_history.history['val_loss'])
             plt.ylabel('loss')
@@ -102,7 +103,7 @@ def single_layer():
 
             #train loss
             plot_val = plt.figure()
-            title = 'Training Loss,Crossentropy Model, {}:10 '.format(h_1)
+            title = 'Training Loss Crossentropy Model {}-10 '.format(h_1)
             plt.title(title, loc='center', pad=None)
             plt.plot(CE_history.history['loss'])
             plt.ylabel('loss')
@@ -128,10 +129,9 @@ def single_layer():
         #απελευθερωση μνημης
         print(f'Clearing session....')
         tensorflow.keras.backend.clear_session()
-        plt.close(plot_acc)
-        plt.close(plot_val)
-        plt.close(plot_loss)
-
+        plt.close(1)
+        plt.close(2)
+        plt.close(3)
         #αρχικοποίηση καινούριων μεταβλητων
         loss_sum = 0
         acc_sum = 0
@@ -154,8 +154,8 @@ def single_layer():
 
             # plots
             # accuracy
-            plot_acc = plt.figure()
-            title = 'Validation Accuracy,MSE Model,{}:10'.format(h_1)
+            plot_acc = plt.figure(1)
+            title = 'Validation Accuracy MSE Model {}-10'.format(h_1)
             plt.title(title, loc='center', pad=None)
             plt.plot(MSE_history.history['val_accuracy'])
             plt.ylabel('acc')
@@ -166,8 +166,8 @@ def single_layer():
             plot_acc.savefig('./plots/A2/Single_Layer/{}.png'.format(title), format='png')
 
             # loss
-            plot_loss = plt.figure()
-            title = 'Validation Loss,MSE Model,{}:10'.format(h_1)
+            plot_loss = plt.figure(2)
+            title = 'Validation Loss MSE Model {}-10'.format(h_1)
             plt.title(title, loc='center', pad=None)
             plt.plot(MSE_history.history['val_loss'])
             plt.ylabel('loss')
@@ -178,8 +178,8 @@ def single_layer():
             plot_loss.savefig('./plots/A2/Single_Layer/{}.png'.format(title), format='png')
 
             # train loss
-            plot_val = plt.figure()
-            title = 'Training Loss,MSE Model,{}:10'.format(h_1)
+            plot_val = plt.figure(3)
+            title = 'Training Loss MSE Model {}-10'.format(h_1)
             plt.title(title, loc='center', pad=None)
             plt.plot(MSE_history.history['loss'])
             plt.ylabel('loss')
@@ -204,4 +204,6 @@ def single_layer():
         #καθαρισμός μνήμης
         print(f'Clearing session....')
         tensorflow.keras.backend.clear_session()
-        plt.close(all)
+        plt.close(1)
+        plt.close(2)
+        plt.close(3)

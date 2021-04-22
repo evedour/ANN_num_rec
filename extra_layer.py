@@ -81,7 +81,7 @@ def extra_layer():
             #plots
             #accuracy
             plot_acc = plt.figure(1)
-            title = 'Validation Accuracy,Crossentropy Model,{}:{}:10'.format(H1, h_2)
+            title = 'Validation Accuracy Crossentropy Model {}-{}-10'.format(H1, h_2)
             plt.title(title, loc='center', pad=None)
             plt.plot(CE_history.history['val_accuracy'])
             plt.ylabel('acc')
@@ -89,21 +89,21 @@ def extra_layer():
             plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
             #Save locally
             directories.filecheck('./plots/A2/Extra_Layer/{}.png'.format(title))
-            plot_acc.savefig('./plots/A2/Extra_Layer/{}.png'.format(title), format='png')
+            plot_acc.savefig("./plots/A2/Extra_Layer/{}.png".format(title), format='png')
 
             #loss
             plot_loss = plt.figure(2)
-            title ='Validation Loss,Crossentropy Model,{}:{}:10'.format(H1, h_2)
+            title ='Validation Loss Crossentropy Model {}-{}-10'.format(H1, h_2)
             plt.title(title, loc='center', pad=None)
             plt.plot(CE_history.history['val_loss'])
             plt.ylabel('loss')
             plt.xlabel('epoch')
             plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
-            plot_loss.savefig('./plots/A2/Extra_Layer/{}.png'.format(title), format='png')
+            plot_loss.savefig("./plots/A2/Extra_Layer/{}.png".format(title), format='png')
 
             #train loss
             plot_val = plt.figure(3)
-            title = 'Training Loss,Crossentropy Model,{}:{}:10'.format(H1, h_2)
+            title = 'Training Loss Crossentropy Model {}-{}-10'.format(H1, h_2)
             plt.title(title, loc='center', pad=None)
             plt.plot(CE_history.history['loss'])
             plt.ylabel('loss')
@@ -127,7 +127,9 @@ def extra_layer():
         #απελευθερωση μνημης
         print(f'Clearing session....')
         tensorflow.keras.backend.clear_session()
-
+        plt.close(1)
+        plt.close(2)
+        plt.close(3)
         #αρχικοποίηση καινούριων μεταβλητων
         loss_sum = 0
         acc_sum = 0
@@ -151,7 +153,7 @@ def extra_layer():
             # plots
             # accuracy
             plot_acc = plt.figure(1)
-            title = 'Validation Accuracy,MSE Model,{}:{}:10'.format(H1, h_2)
+            title = 'Validation Accuracy MSE Model {}-{}-10'.format(H1, h_2)
             plt.title(title, loc='center', pad=None)
             plt.plot(MSE_history.history['val_accuracy'])
             plt.ylabel('acc')
@@ -163,7 +165,7 @@ def extra_layer():
 
             # loss
             plot_loss = plt.figure(2)
-            title = 'Validation Loss,MSE Model,{}:{}:10'.format(H1, h_2)
+            title = 'Validation Loss MSE Model {}-{}-10'.format(H1, h_2)
             plt.title(title, loc='center', pad=None)
             plt.plot(MSE_history.history['val_loss'])
             plt.ylabel('loss')
@@ -175,7 +177,7 @@ def extra_layer():
 
             # train loss
             plot_val = plt.figure(3)
-            title = 'Training Loss,MSE Model,{}:{}:10'.format(H1, h_2)
+            title = 'Training Loss MSE Model {}-{}-10'.format(H1, h_2)
             plt.title(title, loc='center', pad=None)
             plt.plot(MSE_history.history['loss'])
             plt.ylabel('loss')
@@ -200,3 +202,6 @@ def extra_layer():
         #καθαρισμός μνήμης
         print(f'Clearing session....')
         tensorflow.keras.backend.clear_session()
+        plt.close(1)
+        plt.close(2)
+        plt.close(3)

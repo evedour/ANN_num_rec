@@ -14,60 +14,91 @@ def filecheck(filename):
 #A2
 def single_layer():
     #logs
-    if not(os.path.isdir('%s/logs' % parent)):
+    if not(os.path.isdir('{}/logs'.format(parent))):
         print('creating logs...')
         folder_name = 'logs'
         folder = os.path.join(parent, folder_name)
         os.mkdir(folder)
-    if not(os.path.isdir('%s/logs/A2' %parent)):
+    if not(os.path.isdir('{}/logs/A2'.format(parent))):
         folder_name = 'A2'
-        folder = os.path.join('%s/logs' % parent, folder_name)
+        folder = os.path.join('{}/logs'.format(parent), folder_name)
         os.mkdir(folder)
-    if not (os.path.isdir('%s/logs/A2/Single_Layer' % parent)):
+    if not (os.path.isdir('{}/logs/A2/Single_Layer'.format(parent))):
         folder_name = 'Single_Layer'
-        folder = os.path.join('%s/logs/A2' % parent, folder_name)
+        folder = os.path.join('{}/logs/A2'.format(parent), folder_name)
         os.mkdir(folder)
     #plots
-    if not(os.path.isdir('%s/plots' % parent)):
+    if not(os.path.isdir('{}/plots'.format(parent))):
         folder_name = 'plots'
         folder = os.path.join(parent, folder_name)
         os.mkdir(folder)
-    if not(os.path.isdir('%s/plots/A2' %parent)):
+    if not(os.path.isdir('{}/plots/A2'.format(parent))):
         print('creating plot logs...')
         folder_name = 'A2'
-        folder = os.path.join('%s/plots' % parent, folder_name)
+        folder = os.path.join('{}/plots'.format(parent), folder_name)
         os.mkdir(folder)
-    if not (os.path.isdir('%s/logs/A2/Single_Layer' % parent)):
+    if not (os.path.isdir('{}/plots/A2/Single_Layer'.format(parent))):
         folder_name = 'Single_Layer'
-        folder = os.path.join('%s/plots/A2' % parent, folder_name)
+        folder = os.path.join('{}/plots/A2'.format(parent), folder_name)
         os.mkdir(folder)
 #######################################################################################################################
 def extra_layer():
     #logs
-    if not(os.path.isdir('%s/logs' % parent)):
+    if not(os.path.isdir('{}/logs'.format(parent))):
         print('creating logs...')
         folder_name = 'logs'
         folder = os.path.join(parent, folder_name)
         os.mkdir(folder)
-    if not(os.path.isdir('%s/logs/A2' %parent)):
+    if not(os.path.isdir('{}/logs/A2'.format(parent))):
         folder_name = 'A2'
-        folder = os.path.join('%s/logs' % parent, folder_name)
+        folder = os.path.join('{}/logs'.format(parent), folder_name)
         os.mkdir(folder)
-    if not (os.path.isdir('%s/logs/A2/Extra_Layer' % parent)):
+    if not (os.path.isdir('{}/logs/A2/Extra_Layer'.format(parent))):
         folder_name = 'Extra_Layer'
-        folder = os.path.join('%s/logs/A2' % parent, folder_name)
+        folder = os.path.join('{}/logs/A2'.format(parent), folder_name)
         os.mkdir(folder)
     #plots
-    if not(os.path.isdir('%s/plots' % parent)):
+    if not(os.path.isdir('{}/plots'.format(parent))):
         folder_name = 'plots'
         folder = os.path.join(parent, folder_name)
         os.mkdir(folder)
-    if not(os.path.isdir('%s/plots/A2' %parent)):
+    if not(os.path.isdir('{}/plots/A2'.format(parent))):
         print('creating plot logs...')
         folder_name = 'A2'
-        folder = os.path.join('%s/plots' % parent, folder_name)
+        folder = os.path.join('{}/plots'.format(parent), folder_name)
         os.mkdir(folder)
-    if not (os.path.isdir('%s/logs/A2/Extra_Layer' % parent)):
+    if not (os.path.isdir('{}/plots/A2/Extra_Layer'.format(parent))):
         folder_name = 'Extra_Layer'
-        folder = os.path.join('%s/plots/A2' % parent, folder_name)
+        folder = os.path.join('{}/plots/A2'.format(parent), folder_name)
         os.mkdir(folder)
+########################################################################################################################
+def extra_layer():
+    #logs
+    if not(os.path.isdir('{}/logs'.format(parent))):
+        print('creating logs...')
+        folder_name = 'logs'
+        folder = os.path.join(parent, folder_name)
+        os.mkdir(folder)
+    if not(os.path.isdir('{}/logs/A2'.format(parent))):
+        folder_name = 'A2'
+        folder = os.path.join('{}/logs'.format(parent), folder_name)
+        os.mkdir(folder)
+    if not (os.path.isdir('{}/logs/A2/Early_Stopping'.format(parent))):
+        folder_name = 'Early_Stopping'
+        folder = os.path.join('{}/logs/A2'.format(parent), folder_name)
+        os.mkdir(folder)
+    #plots
+    if not(os.path.isdir('{}/plots'.format(parent))):
+        folder_name = 'plots'
+        folder = os.path.join(parent, folder_name)
+        os.mkdir(folder)
+    if not(os.path.isdir('{}/plots/A2'.format(parent))):
+        print('creating plot logs...')
+        folder_name = 'A2'
+        folder = os.path.join('{}/plots'.format(parent), folder_name)
+        os.mkdir(folder)
+    if not (os.path.isdir('{}/plots/A2/Early_Stopping'.format(parent))):
+        folder_name = 'Early_Stopping'
+        folder = os.path.join('{}/plots/A2' .format(parent), folder_name)
+        os.mkdir(folder)
+########################################################################################################################
