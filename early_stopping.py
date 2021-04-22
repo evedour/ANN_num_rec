@@ -47,9 +47,9 @@ def early_stopping():
     model_MSE = Sequential()
     # πρώτο κρυφό επίπεδο
     model_CE.add(Dense(H1, input_shape=input_shape, activation='relu'))
-    model_CE.add(Dense(H2, activation='relu'))
-    # δεύτερο κρυφό επίπεδο
     model_MSE.add(Dense(H1, input_shape=input_shape, activation='relu'))
+    # δεύτερο κρυφό επίπεδο
+    model_CE.add(Dense(H2, activation='relu'))
     model_MSE.add(Dense(H2, activation='relu'))
     # επίπεδο εξόδου
     model_CE.add(Dense(classes, activation='softmax'))
@@ -157,39 +157,31 @@ def early_stopping():
         # plots
         # accuracy
         plot_acc = plt.figure(1)
-        title = 'Validation Accuracy,MSE Model,{}-{}-10'.format(H1, H2)
-        plt.title(title, loc='center', pad=None)
+        title1 = 'Validation Accuracy,MSE Model,{}-{}-10'.format(H1, H2)
+        plt.title(title1, loc='center', pad=None)
         plt.plot(MSE_history.history['val_accuracy'])
         plt.ylabel('acc')
         plt.xlabel('epoch')
         plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
-        # Save locally
-        directories.filecheck('./plots/A2/Extra_Layer/{}.png'.format(title))
-        plot_acc.savefig('./plots/A2/Extra_Layer/{}.png'.format(title), format='png')
+
 
         # loss
         plot_loss = plt.figure(2)
-        title = 'Validation Loss,MSE Model,{}-{}-10'.format(H1, H2)
-        plt.title(title, loc='center', pad=None)
+        title2 = 'Validation Loss,MSE Model,{}-{}-10'.format(H1, H2)
+        plt.title(title2, loc='center', pad=None)
         plt.plot(MSE_history.history['val_loss'])
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
-        # Save locally
-        directories.filecheck('./plots/A2/Extra_Layer/{}.png'.format(title))
-        plot_loss.savefig('./plots/A2/Extra_Layer/{}.png'.format(title), format='png')
 
         # train loss
         plot_val = plt.figure(3)
-        title = 'Training Loss,MSE Model,{}-{}-10'.format(H1, H2)
-        plt.title(title, loc='center', pad=None)
+        title3 = 'Training Loss,MSE Model,{}-{}-10'.format(H1, H2)
+        plt.title(title3, loc='center', pad=None)
         plt.plot(MSE_history.history['loss'])
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
-        # Save locally
-        directories.filecheck('./plots/A2/Extra_Layer/{}.png'.format(title))
-        plot_val.savefig('./plots/A2/Extra_Layer/{}.png'.format(title), format='png')
 
         # μετρήσεις μοντέλου
         MSE_results = model_MSE.evaluate(x_test, y_test, verbose=1)
@@ -199,6 +191,14 @@ def early_stopping():
         # αποθήκευση για προβολή των αποτελεσμάτων 5-fold CV
         loss_sum += MSE_results[0]
         acc_sum += MSE_results[1]
+    # Save locally
+    directories.filecheck('./plots/A2/Extra_Layer/{}.png'.format(title1))
+    directories.filecheck('./plots/A2/Extra_Layer/{}.png'.format(title2))
+    plot_loss.savefig('./plots/A2/Extra_Layer/{}.png'.format(title2), format='png')
+    plot_acc.savefig('./plots/A2/Extra_Layer/{}.png'.format(title1), format='png')
+    directories.filecheck('./plots/A2/Extra_Layer/{}.png'.format(title3))
+    plot_val.savefig('./plots/A2/Extra_Layer/{}.png'.format(title3), format='png')
+
     # εκτύπωση αποτελεσμάτων
     print(f'Results sum (MSE) - Loss {loss_sum / 5} - Accuracy {acc_sum / 5}')
     f.close()

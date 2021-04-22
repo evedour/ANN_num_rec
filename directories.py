@@ -102,3 +102,81 @@ def extra_layer():
         folder = os.path.join('{}/plots/A2' .format(parent), folder_name)
         os.mkdir(folder)
 ########################################################################################################################
+########################################################################################################################
+#A3
+def A3():
+    # logs
+    if not (os.path.isdir('{}/logs'.format(parent))):
+        print('creating logs...')
+        folder_name = 'logs'
+        folder = os.path.join(parent, folder_name)
+        os.mkdir(folder)
+    if not (os.path.isdir('{}/logs/A3'.format(parent))):
+        folder_name = 'A3'
+        folder = os.path.join('{}/logs'.format(parent), folder_name)
+        os.mkdir(folder)
+    # plots
+    if not (os.path.isdir('{}/plots'.format(parent))):
+        folder_name = 'plots'
+        folder = os.path.join(parent, folder_name)
+        os.mkdir(folder)
+    if not (os.path.isdir('{}/plots/A3'.format(parent))):
+        print('creating plot logs...')
+        folder_name = 'A3'
+        folder = os.path.join('{}/plots'.format(parent), folder_name)
+        os.mkdir(folder)
+########################################################################################################################
+########################################################################################################################
+#A4
+def A4():
+    # logs
+    if not (os.path.isdir('{}/logs'.format(parent))):
+        print('creating logs...')
+        folder_name = 'logs'
+        folder = os.path.join(parent, folder_name)
+        os.mkdir(folder)
+    if not (os.path.isdir('{}/logs/A4'.format(parent))):
+        folder_name = 'A4'
+        folder = os.path.join('{}/logs'.format(parent), folder_name)
+        os.mkdir(folder)
+    # plots
+    if not (os.path.isdir('{}/plots'.format(parent))):
+        folder_name = 'plots'
+        folder = os.path.join(parent, folder_name)
+        os.mkdir(folder)
+    if not (os.path.isdir('{}/plots/A4'.format(parent))):
+        print('creating plot logs...')
+        folder_name = 'A4'
+        folder = os.path.join('{}/plots'.format(parent), folder_name)
+        os.mkdir(folder)
+########################################################################################################################
+########################################################################################################################
+#A5
+def A5():
+    #logs
+    if not(os.path.isdir('{}/logs'.format(parent))):
+        print('creating logs...')
+        folder_name = 'logs'
+        folder = os.path.join(parent, folder_name)
+        os.mkdir(folder)
+    if not(os.path.isdir('{}/logs/A5'.format(parent))):
+        folder_name = 'A5'
+        folder = os.path.join('{}/logs'.format(parent), folder_name)
+        os.mkdir(folder)
+    if not (os.path.isdir('{}/logs/A5/Dropout'.format(parent))):
+        folder_name = 'Early_Stopping'
+        folder = os.path.join('{}/logs/A2'.format(parent), folder_name)
+        os.mkdir(folder)
+    #plots
+    if not(os.path.isdir('{}/plots'.format(parent))):
+        folder_name = 'plots'
+        folder = os.path.join(parent, folder_name)
+        os.mkdir(folder)
+    if not(os.path.isdir('{}/plots/A5'.format(parent))):
+        print('creating plot logs...')
+        folder_name = 'A5'
+        folder = os.path.join('{}/plots'.format(parent), folder_name)
+        os.mkdir(folder)
+    if not (os.path.isdir('{}/plots/A5/Dropout'.format(parent))):
+        folder_name = 'Early_Stopping'
+        folder = os.path.join('{}/plots/A5' .format(parent), folder_name)
