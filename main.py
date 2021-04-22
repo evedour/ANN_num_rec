@@ -1,5 +1,5 @@
 import A3
-import single_layer, extra_layer, early_stopping, A3, A4_old, A5, A5_dropout
+import single_layer, extra_layer, early_stopping, A3, A4, A5, A5_dropout
 flag = True
 print('Project Υπολογιστικής Νοημοσύνης - Μέρος Α')
 while flag:
