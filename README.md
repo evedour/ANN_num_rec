@@ -1,9 +1,9 @@
 # ANN_num_rec
 
-##Project Υπολογιστικής Νοημοσύνης
-###ΜΕΡΟΣ Α
+## Project Υπολογιστικής Νοημοσύνης
+### ΜΕΡΟΣ Α
 
-###A2:Επιλογή αρχιτεκτονικής
+### A2:Επιλογή αρχιτεκτονικής
 Ερώτημα   |   Υλοποίηση
 --- | ---
 A2-στ | [**single_layer.py**](https://github.com/evedour/ANN_num_rec/blob/master/single_layer.py)
