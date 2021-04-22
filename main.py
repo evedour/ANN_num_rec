@@ -52,12 +52,12 @@ for h_1 in H1:
     model_MSE.add(Dense(classes, activation='softmax'))
     #compile
     #crossentropy
-    model_CE.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    model_CE.compile(loss='categorical_crossentropy', optimizer='SGD', metrics=['accuracy'])
     #mse
-    model_MSE.compile(loss='mean_squared_error',optimizer='adam', metrics=['accuracy'])
+    model_MSE.compile(loss='mean_squared_error', optimizer='SGD', metrics=['accuracy'])
     #αρχείο εξόδου
     f = open(f_CE, 'w')
-    print('Starting CE for %s nodes' %h_1)
+    print('Starting CE for %s nodes' % h_1)
     sys.stdout = f
     #######################################################################################################################
     ###################################### CROSS ENTROPY 5-FOLD CV ########################################################
@@ -82,7 +82,7 @@ for h_1 in H1:
         plt.xlabel('epoch')
         plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
         #Save locally
-        plot_acc.savefig('./plots/A2/Single_Layer/%s' % title, format='png')
+        plot_acc.savefig('./plots/A2/Single_Layer/%s.png' % title, format='png')
 
         #loss
         plot_loss = plt.figure(2)
@@ -92,7 +92,7 @@ for h_1 in H1:
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
-        plot_loss.savefig('./plots/A2/Single_Layer/%s' % title, format='png')
+        plot_loss.savefig('./plots/A2/Single_Layer/%s.png' % title, format='png')
 
         #train loss
         plot_val = plt.figure(3)
@@ -102,7 +102,7 @@ for h_1 in H1:
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
-        plot_val.savefig('./plots/A2/Single_Layer/%s' % title, format='png')
+        plot_val.savefig('./plots/A2/Single_Layer/%s.png' % title, format='png')
 
         #μετρήσεις μοντέλου
         CE_results = model_CE.evaluate(x_test, y_test, verbose=1)
@@ -152,7 +152,7 @@ for h_1 in H1:
         plt.xlabel('epoch')
         plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
         # Save locally
-        plot_acc.savefig('./plots/A2/Single_Layer/%s' % title, format='png')
+        plot_acc.savefig('./plots/A2/Single_Layer/%s.png' % title, format='png')
 
         # loss
         plot_loss = plt.figure(2)
@@ -163,7 +163,7 @@ for h_1 in H1:
         plt.xlabel('epoch')
         plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
         # Save locally
-        plot_loss.savefig('./plots/A2/Single_Layer/%s' % title, format='png')
+        plot_loss.savefig('./plots/A2/Single_Layer/%s.png' % title, format='png')
 
         # train loss
         plot_val = plt.figure(3)
@@ -174,7 +174,7 @@ for h_1 in H1:
         plt.xlabel('epoch')
         plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
         # Save locally
-        plot_val.savefig('./plots/A2/Single_Layer/%s' % title, format='png')
+        plot_val.savefig('./plots/A2/Single_Layer/%s.png' % title, format='png')
 
         # μετρήσεις μοντέλου
         MSE_results = model_MSE.evaluate(x_test, y_test, verbose=1)
