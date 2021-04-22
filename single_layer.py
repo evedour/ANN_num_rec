@@ -204,6 +204,4 @@ def single_layer():
         #καθαρισμός μνήμης
         print(f'Clearing session....')
         tensorflow.keras.backend.clear_session()
-        plt.close(plot_acc)
-        plt.close(plot_val)
-        plt.close(plot_loss)
+        plt.close(all)
