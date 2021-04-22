@@ -41,6 +41,8 @@ print(f'Feature shape: {input_shape}')
 for h_1 in H1:
     f_CE = "./logs/A2/Single_Layer/results_CE_%s.txt" % h_1
     f_MSE ="./logs/A2/Single_Layer/results_MSE_%s.txt" % h_1
+    directories.filecheck(f_CE)
+    directories.filecheck(f_MSE)
     # Δημιουργία μοντέλων με χρήση του keras API
     model_CE = Sequential()
     model_MSE = Sequential()
@@ -74,35 +76,40 @@ for h_1 in H1:
 
         #plots
         #accuracy
-        plot_acc = plt.figure(1)
-        title = 'Validation Accuracy,Crossentropy Model,%s:10'% h_1
+        plot_acc = plt.figure()
+        title = 'Validation Accuracy,Crossentropy Model {}:10'.format(h_1)
         plt.title(title, loc='center', pad=None)
         plt.plot(CE_history.history['val_accuracy'])
         plt.ylabel('acc')
         plt.xlabel('epoch')
         plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
         #Save locally
-        plot_acc.savefig('./plots/A2/Single_Layer/%s.png' % title, format='png')
+        directories.filecheck('./plots/A2/Single_Layer/{}.png'.format(title))
+        plot_acc.savefig('./plots/A2/Single_Layer/{}.png'.format(title), format='png')
 
         #loss
-        plot_loss = plt.figure(2)
-        title ='Validation Loss,Crossentropy Model,%s:10' % h_1
+        plot_loss = plt.figure()
+        title ='Validation Loss,Crossentropy Model {}:10'.format(h_1)
         plt.title(title, loc='center', pad=None)
         plt.plot(CE_history.history['val_loss'])
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
-        plot_loss.savefig('./plots/A2/Single_Layer/%s.png' % title, format='png')
+        #Save locally
+        directories.filecheck('./plots/A2/Single_Layer/{}.png'.format(title))
+        plot_loss.savefig('./plots/A2/Single_Layer/{}.png'.format(title), format='png')
 
         #train loss
-        plot_val = plt.figure(3)
-        title = 'Training Loss,Crossentropy Model, %s:10 ' % h_1
+        plot_val = plt.figure()
+        title = 'Training Loss,Crossentropy Model, {}:10 '.format(h_1)
         plt.title(title, loc='center', pad=None)
         plt.plot(CE_history.history['loss'])
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
-        plot_val.savefig('./plots/A2/Single_Layer/%s.png' % title, format='png')
+        #Save locally
+        directories.filecheck('./plots/A2/Single_Layer/{}.png'.format(title))
+        plot_val.savefig('./plots/A2/Single_Layer/{}.png'.format(title), format='png')
 
         #μετρήσεις μοντέλου
         CE_results = model_CE.evaluate(x_test, y_test, verbose=1)
@@ -113,7 +120,6 @@ for h_1 in H1:
         loss_sum += CE_results[0]
         acc_sum += CE_results[1]
     #εκτυπωση αποτελεσμάτων
-    #plt.show()
     print(f'Results sum (Crossentropy)- Loss {loss_sum/5} - Accuracy {acc_sum/5}')
     #αναμονή input για την αποθήκευση των μετρήσεων
     f.close()
@@ -144,37 +150,40 @@ for h_1 in H1:
 
         # plots
         # accuracy
-        plot_acc = plt.figure(1)
-        title = 'Validation Accuracy,MSE Model,%s:10' % h_1
+        plot_acc = plt.figure()
+        title = 'Validation Accuracy,MSE Model,{}:10'.format(h_1)
         plt.title(title, loc='center', pad=None)
         plt.plot(MSE_history.history['val_accuracy'])
         plt.ylabel('acc')
         plt.xlabel('epoch')
         plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
         # Save locally
-        plot_acc.savefig('./plots/A2/Single_Layer/%s.png' % title, format='png')
+        directories.filecheck('./plots/A2/Single_Layer/{}.png'.format(title))
+        plot_acc.savefig('./plots/A2/Single_Layer/{}.png'.format(title), format='png')
 
         # loss
-        plot_loss = plt.figure(2)
-        title = 'Validation Loss,MSE Model,%s:10' % h_1
+        plot_loss = plt.figure()
+        title = 'Validation Loss,MSE Model,{}:10'.format(h_1)
         plt.title(title, loc='center', pad=None)
         plt.plot(MSE_history.history['val_loss'])
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
         # Save locally
-        plot_loss.savefig('./plots/A2/Single_Layer/%s.png' % title, format='png')
+        directories.filecheck('./plots/A2/Single_Layer/{}.png'.format(title))
+        plot_loss.savefig('./plots/A2/Single_Layer/{}.png'.format(title), format='png')
 
         # train loss
-        plot_val = plt.figure(3)
-        title = 'Training Loss,MSE Model,%s:10 ' % h_1
+        plot_val = plt.figure()
+        title = 'Training Loss,MSE Model,{}:10'.format(h_1)
         plt.title(title, loc='center', pad=None)
         plt.plot(MSE_history.history['loss'])
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
         # Save locally
-        plot_val.savefig('./plots/A2/Single_Layer/%s.png' % title, format='png')
+        directories.filecheck('./plots/A2/Single_Layer/{}.png'.format(title))
+        plot_val.savefig('./plots/A2/Single_Layer/{}.png'.format(title), format='png')
 
         # μετρήσεις μοντέλου
         MSE_results = model_MSE.evaluate(x_test, y_test, verbose=1)
@@ -185,7 +194,6 @@ for h_1 in H1:
         loss_sum += MSE_results[0]
         acc_sum += MSE_results[1]
     #εκτύπωση αποτελεσμάτων
-    #plt.show()
     print(f'Results sum (MSE) - Loss {loss_sum/5} - Accuracy {acc_sum/5}')
     f.close()
     sys.stdout = sys.__stdout__
