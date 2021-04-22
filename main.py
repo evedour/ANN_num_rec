@@ -2,7 +2,7 @@ import single_layer, extra_layer, early_stopping
 flag = True
 print('Project Υπολογιστικής Νοημοσύνης - Μέρος Α')
 while flag:
-    rn = input('Επιλέξτε ερώτημα: \n2\n3\n4\n5\n')
+    rn = input('Επιλέξτε ερώτημα: \n2\n3\n4\n5\n\'all\' to run all 7 files')
     if rn == 'all':
         single_layer.single_layer()
         extra_layer.extra_layer()
