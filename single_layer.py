@@ -74,35 +74,7 @@ def single_layer():
             print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
 
             #fit μοντέλου
-            CE_history = model_CE.fit(xi_train, yi_train, epochs=10, batch_size=200, verbose=1, validation_data=(xi_test, yi_test))
-
-            #plots
-            #accuracy
-            plot_acc = plt.figure()
-            title1 = 'Validation Accuracy Crossentropy Model {}-10'.format(h_1)
-            plt.title(title1, loc='center', pad=None)
-            plt.plot(CE_history.history['val_accuracy'])
-            plt.ylabel('acc')
-            plt.xlabel('epoch')
-            plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
-
-            #loss
-            plot_loss = plt.figure()
-            title2 ='Validation Loss Crossentropy Model {}-10'.format(h_1)
-            plt.title(title2, loc='center', pad=None)
-            plt.plot(CE_history.history['val_loss'])
-            plt.ylabel('loss')
-            plt.xlabel('epoch')
-            plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
-
-            #train loss
-            plot_val = plt.figure()
-            title3 = 'Training Loss Crossentropy Model {}-10 '.format(h_1)
-            plt.title(title3, loc='center', pad=None)
-            plt.plot(CE_history.history['loss'])
-            plt.ylabel('loss')
-            plt.xlabel('epoch')
-            plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+            CE_history = model_CE.fit(xi_train, yi_train, epochs=50, batch_size=200, verbose=1, validation_data=(xi_test, yi_test))
 
             #μετρήσεις μοντέλου
             CE_results = model_CE.evaluate(x_test, y_test, verbose=1)
@@ -112,7 +84,33 @@ def single_layer():
             #αποθήκευση για προβολή των αποτελεσμάτων 5-fold CV
             loss_sum += CE_results[0]
             acc_sum += CE_results[1]
+            # plots
+            # accuracy
+            plot_acc = plt.figure(1)
+            title1 = 'Validation Accuracy Crossentropy Model {}-10'.format(h_1)
+            plt.title(title1, loc='center', pad=None)
+            plt.plot(CE_history.history['val_accuracy'])
+            plt.ylabel('acc')
+            plt.xlabel('epoch')
+            plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
 
+            # loss
+            plot_loss = plt.figure(2)
+            title2 = 'Validation Loss Crossentropy Model {}-10'.format(h_1)
+            plt.title(title2, loc='center', pad=None)
+            plt.plot(CE_history.history['val_loss'])
+            plt.ylabel('loss')
+            plt.xlabel('epoch')
+            plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+
+            # train loss
+            plot_val = plt.figure(3)
+            title3 = 'Training Loss Crossentropy Model {}-10 '.format(h_1)
+            plt.title(title3, loc='center', pad=None)
+            plt.plot(CE_history.history['loss'])
+            plt.ylabel('loss')
+            plt.xlabel('epoch')
+            plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
         #Save locally
         directories.filecheck('./plots/A2/Single_Layer/{}.png'.format(title2))
         plot_loss.savefig('./plots/A2/Single_Layer/{}.png'.format(title2), format='png')
