@@ -1,12 +1,14 @@
 import directories
 import tensorflow
 import sys
+import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.utils import to_categorical
 from sklearn.model_selection import KFold
+from sklearn.preprocessing import MinMaxScaler
 
 def extra_layer():
     #αρχικοποίηση directories αποθήκευσης
@@ -29,8 +31,13 @@ def extra_layer():
     #κανονικοποίηση [0,1]
     x_train = x_train.astype('float32')
     x_test = x_test.astype('float32')
-    x_train /= 255
-    x_test /= 255
+
+    scaler = MinMaxScaler()
+    x_train = scaler.fit_transform(x_train)
+    y_train = y_train.apply(lambda x: 0 if x.strip()=='N' else 1)
+    x_test = scaler.fit_transform(x_test)
+    y_test = scaler.fit_transform(y_test)
+
     #ορισμός των labels
     y_train = to_categorical(y_train, classes)
     y_test = to_categorical(y_test, classes)
@@ -69,6 +76,9 @@ def extra_layer():
         ###################################### CROSS ENTROPY 5-FOLD CV ########################################################
         fold = 1
         kfold = KFold(5, shuffle=True, random_state=1)
+        val_accuracy = []
+        val_loss = []
+        train_loss = []
         for train, test in kfold.split(x_train):
             #διαχωρισμός train-test indexes
             xi_train, xi_test = x_train[train], x_train[test]
@@ -78,35 +88,10 @@ def extra_layer():
             #fit μοντέλου
             CE_history = model_CE.fit(xi_train, yi_train, epochs=10, batch_size=200, verbose=1, validation_data=(xi_test, yi_test))
 
-            #plots
-            #accuracy
-            plot_acc = plt.figure(1)
-            title1 = 'Validation Accuracy Crossentropy Model {}-{}-10'.format(H1, h_2)
-            plt.title(title1, loc='center', pad=None)
-            plt.plot(CE_history.history['val_accuracy'])
-            plt.ylabel('acc')
-            plt.xlabel('epoch')
-            plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
-
-            #loss
-            plot_loss = plt.figure(2)
-            title2 ='Validation Loss Crossentropy Model {}-{}-10'.format(H1, h_2)
-            plt.title(title2, loc='center', pad=None)
-            plt.plot(CE_history.history['val_loss'])
-            plt.ylabel('loss')
-            plt.xlabel('epoch')
-            plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
-
-
-            #train loss
-            plot_val = plt.figure(3)
-            title3 = 'Training Loss Crossentropy Model {}-{}-10'.format(H1, h_2)
-            plt.title(title3, loc='center', pad=None)
-            plt.plot(CE_history.history['loss'])
-            plt.ylabel('loss')
-            plt.xlabel('epoch')
-            plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
-
+            #στατιστικά
+            val_accuracy.append(CE_history.history['val_accuracy'])
+            val_loss.append(CE_history.history['val_loss'])
+            train_loss.append(CE_history.history['loss'])
 
             #μετρήσεις μοντέλου
             CE_results = model_CE.evaluate(x_test, y_test, verbose=1)
@@ -116,6 +101,34 @@ def extra_layer():
             #αποθήκευση για προβολή των αποτελεσμάτων 5-fold CV
             loss_sum += CE_results[0]
             acc_sum += CE_results[1]
+
+        # plots
+        # accuracy
+        plot_acc = plt.figure(1)
+        title1 = 'Validation Accuracy Crossentropy Model {}-{}-10'.format(H1, h_2)
+        plt.title(title1, loc='center', pad=None)
+        plt.plot(np.mean(val_accuracy, axis = 1))
+        plt.ylabel('acc')
+        plt.xlabel('epoch')
+        plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+
+        # loss
+        plot_loss = plt.figure(2)
+        title2 = 'Validation Loss Crossentropy Model {}-{}-10'.format(H1, h_2)
+        plt.title(title2, loc='center', pad=None)
+        plt.plot(np.mean(val_loss, axis = 1))
+        plt.ylabel('loss')
+        plt.xlabel('epoch')
+        plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+
+        # train loss
+        plot_val = plt.figure(3)
+        title3 = 'Training Loss Crossentropy Model {}-{}-10'.format(H1, h_2)
+        plt.title(title3, loc='center', pad=None)
+        plt.plot(np.mean(train_loss, axis = 1))
+        plt.ylabel('loss')
+        plt.xlabel('epoch')
+        plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
         # Save locally
         directories.filecheck('./plots/A2/Extra_Layer/{}.png'.format(title1))
         directories.filecheck('./plots/A2/Extra_Layer/{}.png'.format(title2))
@@ -134,6 +147,9 @@ def extra_layer():
         plt.close(1)
         plt.close(2)
         plt.close(3)
+        val_accuracy.clear()
+        val_loss.clear()
+        train_loss.clear()
         #αρχικοποίηση καινούριων μεταβλητων
         loss_sum = 0
         acc_sum = 0
@@ -154,12 +170,16 @@ def extra_layer():
             # fit μοντέλου
             MSE_history = model_MSE.fit(xi_train, yi_train, epochs=10, batch_size=200, verbose=1, validation_data=(xi_test, yi_test))
 
+            val_accuracy.append(MSE_history.history['val_accuracy'])
+            val_loss.append(MSE_history.history['val_loss'])
+            train_loss.append(MSE_history.history['loss'])
+
             # plots
             # accuracy
             plot_acc = plt.figure(1)
             title1 = 'Validation Accuracy MSE Model {}-{}-10'.format(H1, h_2)
             plt.title(title1, loc='center', pad=None)
-            plt.plot(MSE_history.history['val_accuracy'])
+            plt.plot(np.mean(val_accuracy, axis = 1))
             plt.ylabel('acc')
             plt.xlabel('epoch')
             plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
@@ -168,7 +188,7 @@ def extra_layer():
             plot_loss = plt.figure(2)
             title2 = 'Validation Loss MSE Model {}-{}-10'.format(H1, h_2)
             plt.title(title2, loc='center', pad=None)
-            plt.plot(MSE_history.history['val_loss'])
+            plt.plot(np.mean(val_loss, axis = 1))
             plt.ylabel('loss')
             plt.xlabel('epoch')
             plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
@@ -177,7 +197,7 @@ def extra_layer():
             plot_val = plt.figure(3)
             title3 = 'Training Loss MSE Model {}-{}-10'.format(H1, h_2)
             plt.title(title3, loc='center', pad=None)
-            plt.plot(MSE_history.history['loss'])
+            plt.plot(np.mean(train_loss, axis = 1))
             plt.ylabel('loss')
             plt.xlabel('epoch')
             plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
