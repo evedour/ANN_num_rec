@@ -20,8 +20,6 @@ def extra_layer():
     #αρχικοποίηση μεταβλητών
     features = 784
     classes = 10
-    loss_sum = 0
-    acc_sum = 0
     H1 = 794
     H2 = [10, 50, 100, 150, 200, 397]
     #κάνουμε το mnist reshape
@@ -42,6 +40,8 @@ def extra_layer():
 
     #Έλεγχος για όλα τα H2
     for h_2 in H2:
+        loss_sum = 0
+        acc_sum = 0
         f_CE = "./logs/A2/Extra_Layer/results_CE_%s:%s.txt" % (H1, h_2)
         f_MSE ="./logs/A2/Extra_Layer/results_MSE_%s:%s.txt" % (H1, h_2)
         # Δημιουργία μοντέλων με χρήση του keras API

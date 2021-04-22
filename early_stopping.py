@@ -140,6 +140,8 @@ def early_stopping():
     sys.stdout = f
     #######################################################################################################################
     #################################### MEAN SQUARED ERROR 5-FOLD CV #####################################################
+    loss_sum = 0
+    acc_sum = 0
     kfold = KFold(5, shuffle=True, random_state=1)
     for train, test in kfold.split(x_train):
         # διαχωρισμός train-test indexes

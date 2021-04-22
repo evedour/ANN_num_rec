@@ -20,8 +20,6 @@ def single_layer():
     #αρχικοποίηση μεταβλητών
     features = 784
     classes = 10
-    loss_sum = 0
-    acc_sum = 0
     H1 = [10, 397, 794]
     #κάνουμε το mnist reshape
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -41,6 +39,8 @@ def single_layer():
 
     #Έλεγχος για όλα τα H1
     for h_1 in H1:
+        loss_sum = 0
+        acc_sum = 0
         f_CE = "./logs/A2/Single_Layer/results_CE_%s.txt" % h_1
         f_MSE ="./logs/A2/Single_Layer/results_MSE_%s.txt" % h_1
         directories.filecheck(f_CE)
