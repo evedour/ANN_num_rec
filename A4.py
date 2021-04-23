@@ -85,7 +85,7 @@ def a4():
             print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
 
             # fit μοντέλου
-            history = model.fit(xi_train, yi_train, epochs=50, batch_size=200, verbose=1,
+            history = model.fit(xi_train, yi_train, epochs=10, batch_size=200, verbose=1,
                                 validation_data=(xi_test, yi_test),
                                 callbacks=[tensorflow.keras.callbacks.EarlyStopping(monitor='val)loss', patience=2)])
 
