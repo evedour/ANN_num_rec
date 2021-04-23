@@ -90,9 +90,9 @@ def a3():
                                 callbacks=[tensorflow.keras.callbacks.EarlyStopping(monitor='val)loss', patience=2)])
 
             # στατιστικά
-            aval.append(history.history['val_accuracy'])
-            lval.append(history.history['val_loss'])
-            ltrain.append(history.history['loss'])
+            aval.append(np.mean(history.history['val_accuracy']))
+            lval.append(np.mean(history.history['val_loss']))
+            ltrain.append(np.mean(history.history['loss']))
 
             # μετρησεις μοντέλου
             results = model.evaluate(x_test, y_test, verbose=1)
@@ -108,7 +108,7 @@ def a3():
         plot_acc = plt.figure(1)
         title1 = 'Validation Accuracy η={}, m={}'.format(learning_rates[i], m)
         plt.title(title1, loc='center', pad=None)
-        plt.plot(np.mean(aval), axis=0)
+        plt.plot(aval)
         plt.ylabel('acc')
         plt.xlabel('epoch')
 
@@ -117,9 +117,9 @@ def a3():
         title2 = 'Loss η={}, m={}'.format(learning_rates[i], m)
         plt.title(title2, loc='center', pad=None)
         # validation loss
-        plt.plot(np.mean(lval), axis=0)
+        plt.plot(lval)
         # train loss
-        plt.plot(np.mean(ltrain), axis=0)
+        plt.plot(ltrain)
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['validation', 'train'], loc='upper left')

@@ -24,11 +24,11 @@ while flag:
         if rn_2 == '3':
             early_stopping.early_stopping()
     if rn == 'A3':
-        A3.a4()
+        A3.a3()
     if rn == 'A4':
-        A4.A4()
+        A4.a4()
     else:
         flag = False
     check = input('Συνέχεια με άλλο ερώτημα; (Y/N)')
-    if check.casefold() == 'n':
-        flag = False
+    if check == 'Y':
+        flag = True

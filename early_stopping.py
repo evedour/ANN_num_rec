@@ -94,9 +94,9 @@ def early_stopping():
                                   callbacks=[tensorflow.keras.callbacks.EarlyStopping(monitor="val_loss", patience=2)])
 
         # στατιστικά
-        aval.append(ce_history.history['val_accuracy'])
-        lval.append(ce_history.history['val_loss'])
-        ltrain.append(ce_history.history['loss'])
+        aval.append(np.mean(ce_history.history['val_accuracy']))
+        lval.append(np.mean(ce_history.history['val_loss']))
+        ltrain.append(np.mean(ce_history.history['loss']))
 
         # μετρήσεις μοντέλου
         ce_results = model_ce.evaluate(x_test, y_test, verbose=1)
@@ -112,27 +112,28 @@ def early_stopping():
     plot_acc = plt.figure(1)
     title1 = 'Validation Accuracy Crossentropy Model with Early stopping {}-{}-10'.format(h1, h2)
     plt.title(title1, loc='center', pad=None)
-    plt.plot(np.mean(aval), axis=0)
+    plt.plot(aval)
     plt.ylabel('acc')
     plt.xlabel('epoch')
+    directories.filecheck('./plots/A2/Early_Stopping/{}.png'.format(title1))
+    plot_acc.savefig("./plots/A2/Early_Stopping/{}.png".format(title1), format='png')
 
     # loss
     plot_loss = plt.figure(2)
     title2 = 'Loss Crossentropy Model with Early Stopping {}-{}-10'.format(h1, h2)
     plt.title(title2, loc='center', pad=None)
     # validation loss
-    plt.plot(np.mean(lval), axis=0)
+    plt.plot(lval)
     # train loss
-    plt.plot(np.mean(ltrain), axis=0)
+    plt.plot(ltrain)
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['validation', 'train'], loc='upper left')
 
     # Save locally
-    directories.filecheck('./plots/A2/Early_Stopping/{}.png'.format(title1))
     directories.filecheck('./plots/A2/Early_Stopping/{}.png'.format(title2))
     plot_loss.savefig("./plots/A2/Early_Stopping/{}.png".format(title2), format='png')
-    plot_acc.savefig("./plots/A2/Early_Stopping/{}.png".format(title1), format='png')
+
 
     # εκτυπωση αποτελεσμάτων
     print(f'Συνολικά Αποτελέσματα (Cross Entropy Model)- Loss {loss_sum / 5} - Accuracy {acc_sum / 5}')
@@ -171,9 +172,9 @@ def early_stopping():
                                     callbacks=[tensorflow.keras.callbacks.EarlyStopping(monitor="val_loss", patience=2)])
 
         # αποθήκευση validation metrics για τα plots
-        aval.append(mse_history.history['val_accuracy'])
-        lval.append(mse_history.history['val_loss'])
-        ltrain.append(mse_history.history['loss'])
+        aval.append(np.mean(mse_history.history['val_accuracy']))
+        lval.append(np.mean(mse_history.history['val_loss']))
+        ltrain.append(np.mean(mse_history.history['loss']))
 
         # μετρήσεις μοντέλου
         mse_results = model_mse.evaluate(x_test, y_test, verbose=1)
@@ -188,7 +189,7 @@ def early_stopping():
     plot_acc = plt.figure(1)
     title1 = 'Validation Accuracy MSE Model {}-{}-10'.format(h1, h2)
     plt.title(title1, loc='center', pad=None)
-    plt.plot(np.mean(aval), axis=0)
+    plt.plot(aval)
     plt.ylabel('acc')
     plt.xlabel('epoch')
 
@@ -197,9 +198,9 @@ def early_stopping():
     title2 = 'Loss MSE Model {}-{}-10'.format(h1, h2)
     plt.title(title2, loc='center', pad=None)
     # validation loss
-    plt.plot(np.mean(lval), axis=0)
+    plt.plot(lval)
     # train loss
-    plt.plot(np.mean(ltrain), axis=0)
+    plt.plot(ltrain)
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['validation', 'train'], loc='upper left')
@@ -219,6 +220,3 @@ def early_stopping():
     tensorflow.keras.backend.clear_session()
     plt.close(1)
     plt.close(2)
-
-
-early_stopping()
