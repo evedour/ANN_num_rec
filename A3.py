@@ -55,13 +55,16 @@ def a3():
     model.add(Dense(h2, activation='relu'))
     # Επίπεδο εξόδου
     model.add(Dense(classes, activation='softmax'))
-    for i in range(learning_rates):
+    i = 0
+    for lrate in learning_rates:
         if i == 0:
             m = 0.2
+            i += i
         else:
             m = 0.6
-        opt = tensorflow.keras.optimizers.SGD(lr=learning_rates[i], momentum=m, decay=0.0, nesterov=False)
-        fname = '.logs/A3/results_{}_{}.txt'.format(learning_rates[i], m)
+            i += i
+        opt = tensorflow.keras.optimizers.SGD(lr=lrate, momentum=m, decay=0.0, nesterov=False)
+        fname = '.logs/A3/results_{}_{}.txt'.format(lrate, m)
         directories.filecheck(fname)
 
         # compile
