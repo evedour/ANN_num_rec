@@ -13,7 +13,8 @@ while flag:
         single_layer.single_layer()
         extra_layer.extra_layer()
         early_stopping.early_stopping()
-        A3.A3()
+        A3.a3()
+        A4.a4()
     if rn == 'A2':
         rn_2 = input('Επιλέξτε υποερώτημα: \n1  (Single-layer MLP)\n2   (Two-Layer MLP)\n3  (Early-Stopping)\n')
         if rn_2 == '1':
@@ -23,9 +24,11 @@ while flag:
         if rn_2 == '3':
             early_stopping.early_stopping()
     if rn == 'A3':
-        A3.A3()
+        A3.a4()
     if rn == 'A4':
         A4.A4()
+    else:
+        flag = False
     check = input('Συνέχεια με άλλο ερώτημα; (Y/N)')
-    if check.casefold() == 'N':
+    if check.casefold() == 'n':
         flag = False

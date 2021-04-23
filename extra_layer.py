@@ -75,7 +75,7 @@ def extra_layer():
 
         # αρχείο εξόδου
         f = open(f_ce, 'w')
-        print('Μοντέλο Cross Entropy Loss για {} κόμβους στο πρώτο κρυφό επίπεδο'.format(h1))
+        print('Μοντέλο Cross Entropy Loss για {} κόμβους στο πρώτο κρυφό επίπεδο και {} στο δεύτερο'.format(h1, h_2))
         sys.stdout = f
         ################################################################################################################
         ###################################### CROSS ENTROPY 5-FOLD CV #################################################
@@ -91,7 +91,7 @@ def extra_layer():
             print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
 
             # fit μοντέλου
-            ce_history = model_ce.fit(xi_train, yi_train, epochs=10, batch_size=200, verbose=1,
+            ce_history = model_ce.fit(xi_train, yi_train, epochs=50, batch_size=200, verbose=1,
                                       validation_data=(xi_test, yi_test))
 
             # στατιστικά
@@ -113,18 +113,18 @@ def extra_layer():
         plot_acc = plt.figure(1)
         title1 = 'Validation Accuracy Crossentropy Model {}-{}-10'.format(h1, h_2)
         plt.title(title1, loc='center', pad=None)
-        plt.plot(np.mean(aval, axis=1))
+        plt.plot(np.mean(aval, axis=0))
         plt.ylabel('acc')
         plt.xlabel('epoch')
 
         # loss
         plot_loss = plt.figure(2)
-        title2 = 'Validation Loss Crossentropy Model {}-{}-10'.format(h1, h_2)
+        title2 = 'Loss Crossentropy Model {}-{}-10'.format(h1, h_2)
         plt.title(title2, loc='center', pad=None)
         # validation loss
-        plt.plot(np.mean(lval, axis=1))
+        plt.plot(np.mean(lval, axis=0))
         # train loss
-        plt.plot(np.mean(ltrain, axis=1))
+        plt.plot(np.mean(ltrain, axis=0))
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['validation', 'train'], loc='upper left')
@@ -155,7 +155,7 @@ def extra_layer():
         ltrain.clear()
         # νεο αρχείο εξόδου
         f = open(f_mse, 'w')
-        print('Μοντέλο Mean Squared Error Loss για {} κόμβους στο πρώτο κρυφό επίπεδο'.format(h1))
+        print('Μοντέλο Mean Squared Error Loss για {} κόμβους στο πρώτο κρυφό επίπεδο και {} στο δεύτερο'.format(h1, h_2))
         sys.stdout = f
         #######################################################################################################################
         #################################### MEAN SQUARED ERROR 5-FOLD CV #####################################################
@@ -167,7 +167,7 @@ def extra_layer():
             print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
 
             # fit μοντέλου
-            mse_history = model_mse.fit(xi_train, yi_train, epochs=10, batch_size=200, verbose=1,
+            mse_history = model_mse.fit(xi_train, yi_train, epochs=50, batch_size=200, verbose=1,
                                         validation_data=(xi_test, yi_test))
 
             # αποθήκευση validation metrics για τα plots

@@ -1,6 +1,7 @@
-import sys
-
+import directories
 import tensorflow
+import sys
+import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
@@ -8,111 +9,130 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.utils import to_categorical
 from sklearn.model_selection import KFold
 from tensorflow.keras.regularizers import l2
-import directories
+from sklearn import preprocessing
 
 
-def A4():
+def a4():
     # αρχικοποίηση directories αποθήκευσης
-    directories.A4()
+    directories.A3()
 
-    # check tensorflow's GPU support
+    # GPU support
     physical_devices = tensorflow.config.experimental.list_physical_devices('GPU')
-    print("Num GPUs Available", len(tensorflow.config.experimental.list_physical_devices('GPU')))
+    print("CUDA - Αριθμός διαθέσιμων GPUs:", len(tensorflow.config.experimental.list_physical_devices('GPU')))
     tensorflow.config.experimental.set_memory_growth(physical_devices[0], True)
 
+    # αρχικοποίηση μεταβλητών
     features = 784
     classes = 10
-    H1 = 794
-    H2 = 10
     loss_fun = 'categorical_crossentropy'
+    h1 = 794
+    h2 = 100
     learning_rate = 0.1
     m = 0.6
-    L2 = [0.1, 0.5, 0.9]
-    # κάνουμε το mnist reshape
+    reg_factors = [0.1, 0.5, 0.9]
+
+    # φόρτωση mnist από το keras
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+    # κάνουμε το mnist reshape
     x_train = x_train.reshape(x_train.shape[0], features)
     x_test = x_test.reshape(x_test.shape[0], features)
 
-    # κανονικοποίηση [0,1]
-    x_train = x_train.astype('float32')
-    x_test = x_test.astype('float32')
-    x_train /= 255
-    x_test /= 255
+    # MinMax scaling
+    scaler = preprocessing.MinMaxScaler()
+    x_train = scaler.fit_transform(x_train)
+    x_test = scaler.fit_transform(x_test)
+
     # ορισμός των labels
     y_train = to_categorical(y_train, classes)
     y_test = to_categorical(y_test, classes)
 
     # ορισμός input shape για το μοντέλο MLP βάσει των χαρακτηριστικών
     input_shape = (features,)
-    print(f'Feature shape: {input_shape}')
-    opt = tensorflow.keras.optimizers.SGD(lr = learning_rate, momentum = m, decay=0.0, nesterov=False)
-    for l2_factor in L2:
-        # Create the model
-        fname = './logs/A4/results_{}'.format(l2_factor)
-        model = Sequential()
-        model.add(Dense(H1, kernel_regularizer=l2(l2_factor), bias_regularizer=l2(l2_factor), input_shape=input_shape, activation='relu'))
-        model.add(Dense(H2, activation='relu'))
+
+    # Δημιουργία μοντέλου με χρήση του keras API
+    model = Sequential()
+    opt = tensorflow.keras.optimizers.SGD(lr=learning_rate, momentum=m, decay=0.0, nesterov=False)
+
+    for factor in reg_factors:
+        # Πρώτο κρυφό επίπεδο
+        model.add(Dense(h1, kernel_regularizer=l2(factor), bias_regularizer=l2(factor), input_shape=input_shape,
+                        activation='relu'))
+        # Δεύτερο κρυφό επίπεδο
+        model.add(Dense(h2, activation='relu'))
+        # Επίπεδο εξόδου
         model.add(Dense(classes, activation='softmax'))
-        model.compile(loss=loss_fun, optimizer=opt, metrics='accuracy')
+        fname = '.logs/A4/results_{}.txt'.format(factor)
+        directories.filecheck(fname)
+        # compile
+        model.compile(loss=loss_fun, optimizer=opt, metrics=['accuracy'])
 
         fold = 1
         loss_sum = 0
         acc_sum = 0
+        aval = []
+        lval = []
+        ltrain = []
         f = open(fname, 'w')
         sys.stdout = f
+
+        # 5-fold CV
         kfold = KFold(5, shuffle=True, random_state=1)
         for train, test in kfold.split(x_train):
+            # διαχωρισμός train-test indexes
             xi_train, xi_test = x_train[train], x_train[test]
             yi_train, yi_test = y_train[train], y_train[test]
             print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
 
-            history = model.fit(xi_train, yi_train, epochs=10, batch_size=200, verbose=1,
+            # fit μοντέλου
+            history = model.fit(xi_train, yi_train, epochs=50, batch_size=200, verbose=1,
                                 validation_data=(xi_test, yi_test),
-                                callbacks=[tensorflow.keras.callbacks.EarlyStopping(monitor="val_loss", patience=2)])
-            # plots
-            # accuracy
-            plt_acc = plt.figure(1)
-            title1 = 'Validation Accuracy, L2 factor = {}'.format(l2_factor)
-            plt.title(title1)
-            plt.plot(history.history['val_accuracy'])
-            plt.ylabel('acc')
-            plt.xlabel('epoch')
-            plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+                                callbacks=[tensorflow.keras.callbacks.EarlyStopping(monitor='val)loss', patience=2)])
 
-            # loss
-            plt_loss = plt.figure(2)
-            title2 = 'Validation Loss, L2 factor = {}'.format(l2_factor)
-            plt.title(title2)
-            plt.plot(history.history['val_loss'])
-            plt.ylabel('loss')
-            plt.xlabel('epoch')
-            plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+            # στατιστικά
+            aval.append(history.history['val_accuracy'])
+            lval.append(history.history['val_loss'])
+            ltrain.append(history.history['loss'])
 
-            # train loss
-            plot_val = plt.figure(3)
-            title3 = 'Validation Accuracy, L2 factor = {}'.format(l2_factor)
-            plt.title(title3)
-            plt.title('Training Loss', loc='center', pad=None)
-            plt.plot(history.history['loss'])
-            plt.ylabel('loss')
-            plt.xlabel('epoch')
-            plt.legend(['fold 1', 'fold 2', 'fold 3', 'fold 4', 'fold 5'], loc='upper left')
+            # μετρησεις μοντέλου
+            results = model.evaluate(x_test, y_test, verbose=1)
+            print(f'Αποτελέσματα στο fold # {fold} - Loss: {results[0]} - Accuracy: {results[1]}')
 
-            # Test the model after training
-            test_results = model.evaluate(xi_test, yi_test, verbose=1)
-            print(f'Test results in fold # {fold} - Loss: {test_results[0]} - Accuracy: {test_results[1]}')
-            fold = fold + 1
-            # save 5-fold cv results
-            loss_sum += test_results[0]
-            acc_sum += test_results[1]
-        #Save locally
+            fold += fold
+            # αποθήκευση για προβολή των αποτελεσμάτων 5-fold CV
+            loss_sum += results[0]
+            acc_sum += results[1]
+
+        # plots
+        # accuracy
+        plot_acc = plt.figure(1)
+        title1 = 'Validation Accuracy r='.format(factor)
+        plt.title(title1, loc='center', pad=None)
+        plt.plot(np.mean(aval), axis=0)
+        plt.ylabel('acc')
+        plt.xlabel('epoch')
+
+        # loss
+        plot_loss = plt.figure(2)
+        title2 = 'Loss r={}'.format(factor)
+        plt.title(title2, loc='center', pad=None)
+        # validation loss
+        plt.plot(np.mean(lval), axis=0)
+        # train loss
+        plt.plot(np.mean(ltrain), axis=0)
+        plt.ylabel('loss')
+        plt.xlabel('epoch')
+        plt.legend(['validation', 'train'], loc='upper left')
+
+        # Save locally
         directories.filecheck('./plots/A4/{}.png'.format(title1))
-        plt_acc.savefig('./plots/A4/{}.png'.format(title1), format='png')
         directories.filecheck('./plots/A4/{}.png'.format(title2))
-        plt_loss.savefig('./plots/A4/{}.png'.format(title2), format='png')
-        directories.filecheck('./plots/A4/{}.png'.format(title3))
-        plt_loss.savefig('./plots/A4/{}.png'.format(title3), format='png')
-        print(f'Results sum - Loss {loss_sum/ 5} - Accuracy {acc_sum / 5}')
+        plot_loss.savefig("./plots/A4/{}.png".format(title2), format='png')
+        plot_acc.savefig("./plots/A4/{}.png".format(title1), format='png')
+
+        # εκτύπωση αποτελεσμάτων
+        print(f'Συνολικά Αποτελέσματα - Loss {loss_sum / 5} - Accuracy {acc_sum / 5}')
+        # επιστροφή stdout στην κονσόλα
         f.close()
         sys.stdout = sys.__stdout__
         # απελευθερωση μνημης
@@ -120,4 +140,6 @@ def A4():
         tensorflow.keras.backend.clear_session()
         plt.close(1)
         plt.close(2)
-        plt.close(3)
+        aval.clear()
+        lval.clear()
+        ltrain.clear()

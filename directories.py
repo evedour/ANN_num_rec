@@ -72,7 +72,7 @@ def extra_layer():
         folder = os.path.join('{}/plots/A2'.format(parent), folder_name)
         os.mkdir(folder)
 ########################################################################################################################
-def extra_layer():
+def early_stopping():
     #logs
     if not(os.path.isdir('{}/logs'.format(parent))):
         print('creating logs...')
