@@ -62,7 +62,9 @@ def a4():
         model.add(Dense(h2, activation='relu'))
         # Επίπεδο εξόδου
         model.add(Dense(classes, activation='softmax'))
-        fname = '.logs/A4/results_{}.txt'.format(factor)
+
+        fac = int(factor*10)
+        fname = '.logs/A4/results_{}.txt'.format(fac)
         directories.filecheck(fname)
         # compile
         model.compile(loss=loss_fun, optimizer=opt, metrics=['accuracy'])
@@ -106,7 +108,7 @@ def a4():
         # plots
         # accuracy
         plot_acc = plt.figure(1)
-        title1 = 'Validation Accuracy r='.format(factor)
+        title1 = 'Validation Accuracy r='.format(fac)
         plt.title(title1, loc='center', pad=None)
         plt.plot(aval)
         plt.ylabel('acc')
@@ -114,7 +116,7 @@ def a4():
 
         # loss
         plot_loss = plt.figure(2)
-        title2 = 'Loss r={}'.format(factor)
+        title2 = 'Loss r={}'.format(fac)
         plt.title(title2, loc='center', pad=None)
         # validation loss
         plt.plot(lval)

@@ -64,9 +64,11 @@ def a3():
             m = 0.6
             i += i
         opt = tensorflow.keras.optimizers.SGD(lr=lrate, momentum=m, decay=0.0, nesterov=False)
-        fname = '.logs/A3/results_{}_{}.txt'.format(lrate, m)
-        directories.filecheck(fname)
 
+        lra = int(lrate*1000)
+        mom = int(m*10)
+        fname = '.logs/A3/results_{}_{}.txt'.format(lra, mom)
+        directories.filecheck(fname)
         # compile
         model.compile(loss=loss_fun, optimizer=opt, metrics=['accuracy'])
 
@@ -109,7 +111,7 @@ def a3():
         # plots
         # accuracy
         plot_acc = plt.figure(1)
-        title1 = 'Validation Accuracy η={}, m={}'.format(learning_rates[i], m)
+        title1 = 'Validation Accuracy η={}, m={}'.format(lra, mom)
         plt.title(title1, loc='center', pad=None)
         plt.plot(aval)
         plt.ylabel('acc')
@@ -117,7 +119,7 @@ def a3():
 
         # loss
         plot_loss = plt.figure(2)
-        title2 = 'Loss η={}, m={}'.format(learning_rates[i], m)
+        title2 = 'Loss η={}, m={}'.format(lra, mom)
         plt.title(title2, loc='center', pad=None)
         # validation loss
         plt.plot(lval)
