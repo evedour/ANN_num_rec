@@ -26,7 +26,7 @@ def a3():
     loss_fun = 'categorical_crossentropy'
     h1 = 794
     h2 = 100
-    learning_rates = [0.001, 0.05, 0.1]
+    learning_rates = [0.001,0.001, 0.05, 0.1]
 
     # φόρτωση mnist από το keras
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
