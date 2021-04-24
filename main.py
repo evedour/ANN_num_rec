@@ -31,4 +31,4 @@ while flag:
         flag = False
     check = input('Συνέχεια με άλλο ερώτημα; (Y/N)')
     if check == 'Y':
-        flag = Truea
+        flag = True
