@@ -167,7 +167,7 @@ def extra_layer():
             print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
 
             # fit μοντέλου
-            mse_history = model_mse.fit(xi_train, yi_train, epochs=10, batch_size=200, verbose=1,
+            mse_history = model_mse.fit(xi_train, yi_train, epochs=50, batch_size=200, verbose=1,
                                         validation_data=(xi_test, yi_test))
 
             # αποθήκευση validation metrics για τα plots
@@ -203,6 +203,7 @@ def extra_layer():
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['validation', 'train'], loc='upper left')
+
 
         # Save locally
         directories.filecheck('./plots/A2/Extra_Layer/{}.png'.format(title1))
