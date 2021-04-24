@@ -59,12 +59,12 @@ def a3():
     for lrate in learning_rates:
         if i == 0:
             m = 0.2
-            i += i
+            i = i + 1
         else:
             m = 0.6
-            i += i
+            i = i + 1
+        print(f'Set SGD optimizer to learning rate={lrate} and momentum={m}')
         opt = tensorflow.keras.optimizers.SGD(lr=lrate, momentum=m, decay=0.0, nesterov=False)
-
 
         fname = './logs/A3/results_{}_{}.txt'.format(lrate, m)
         directories.filecheck(fname)

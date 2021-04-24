@@ -1,3 +1,5 @@
+import threading
+
 import directories
 import tensorflow
 import sys
@@ -14,7 +16,7 @@ from sklearn import preprocessing
 
 def a4():
     # αρχικοποίηση directories αποθήκευσης
-    directories.A3()
+    directories.A4()
 
     # GPU support
     physical_devices = tensorflow.config.experimental.list_physical_devices('GPU')
@@ -49,12 +51,11 @@ def a4():
 
     # ορισμός input shape για το μοντέλο MLP βάσει των χαρακτηριστικών
     input_shape = (features,)
-
-    # Δημιουργία μοντέλου με χρήση του keras API
-    model = Sequential()
     opt = tensorflow.keras.optimizers.SGD(lr=learning_rate, momentum=m, decay=0.0, nesterov=False)
 
     for factor in reg_factors:
+        # Δημιουργία μοντέλου με χρήση του keras API
+        model = Sequential()
         # Πρώτο κρυφό επίπεδο
         model.add(Dense(h1, kernel_regularizer=l2(factor), bias_regularizer=l2(factor), input_shape=input_shape,
                         activation='relu'))
@@ -63,8 +64,9 @@ def a4():
         # Επίπεδο εξόδου
         model.add(Dense(classes, activation='softmax'))
 
-        fname = './logs/A4/results_{}.txt'.format(factor)
+        fname = "./logs/A4/results_{}.txt".format(factor)
         directories.filecheck(fname)
+
         # compile
         model.compile(loss=loss_fun, optimizer=opt, metrics=['accuracy'])
 
