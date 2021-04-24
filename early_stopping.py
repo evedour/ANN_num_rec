@@ -187,7 +187,7 @@ def early_stopping():
     # plots
     # accuracy
     plot_acc = plt.figure(1)
-    title1 = 'Validation Accuracy MSE Model {}-{}-10'.format(h1, h2)
+    title1 = 'Validation Accuracy MSE Model {}-{}-10, with early stopping'.format(h1, h2)
     plt.title(title1, loc='center', pad=None)
     plt.plot(aval)
     plt.ylabel('acc')
@@ -195,7 +195,7 @@ def early_stopping():
 
     # loss
     plot_loss = plt.figure(2)
-    title2 = 'Loss MSE Model {}-{}-10'.format(h1, h2)
+    title2 = 'Loss MSE Model {}-{}-10, with early stopping'.format(h1, h2)
     plt.title(title2, loc='center', pad=None)
     # validation loss
     plt.plot(lval)
