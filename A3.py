@@ -91,7 +91,7 @@ def a3():
             # fit μοντέλου
             history = model.fit(xi_train, yi_train, epochs=10, batch_size=200, verbose=1,
                                 validation_data=(xi_test, yi_test),
-                                callbacks=[tensorflow.keras.callbacks.EarlyStopping(monitor='val)loss', patience=2)])
+                                callbacks=[tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss', patience=2)])
 
             # στατιστικά
             aval.append(np.mean(history.history['val_accuracy']))
