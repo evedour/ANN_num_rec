@@ -161,7 +161,7 @@ def single_layer():
             print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
 
             # fit μοντέλου
-            mse_history = model_mse.fit(xi_train, yi_train, epochs=10, batch_size=200, verbose=1,
+            mse_history = model_mse.fit(xi_train, yi_train, epochs=50, batch_size=200, verbose=1,
                                         validation_data=(xi_test, yi_test))
             # αποθήκευση validation metrics για τα plots
             aval.append(mse_history.history['val_accuracy'])
