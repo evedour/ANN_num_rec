@@ -24,7 +24,7 @@ def early_stopping():
     features = 784
     classes = 10
     h1 = 794
-    h2 = 397
+    h2 = 150
 
     # φόρτωση mnist από το keras
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
