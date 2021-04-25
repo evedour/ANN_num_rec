@@ -163,10 +163,7 @@ def A5():
         folder_name = 'A5'
         folder = os.path.join('{}/logs'.format(parent), folder_name)
         os.mkdir(folder)
-    if not (os.path.isdir('{}/logs/A5/Dropout'.format(parent))):
-        folder_name = 'Early_Stopping'
-        folder = os.path.join('{}/logs/A2'.format(parent), folder_name)
-        os.mkdir(folder)
+
     #plots
     if not(os.path.isdir('{}/plots'.format(parent))):
         folder_name = 'plots'
@@ -177,6 +174,3 @@ def A5():
         folder_name = 'A5'
         folder = os.path.join('{}/plots'.format(parent), folder_name)
         os.mkdir(folder)
-    if not (os.path.isdir('{}/plots/A5/Dropout'.format(parent))):
-        folder_name = 'Early_Stopping'
-        folder = os.path.join('{}/plots/A5' .format(parent), folder_name)
