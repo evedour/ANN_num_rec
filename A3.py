@@ -25,7 +25,7 @@ def a3(ep):
     classes = 10
     loss_f = ['categorical_crossentropy', 'mean_squared_error']
     h1 = 794
-    h2 = 150
+    h2 = 50
     learning_rates = [0.001, 0.001, 0.05, 0.1]
 
     # φόρτωση mnist από το keras

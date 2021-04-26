@@ -112,8 +112,7 @@ def early_stopping(ep):
     plot_acc = plt.figure(1)
     title1 = 'Validation Accuracy Crossentropy Model with Early stopping {}-{}-10'.format(h1, h2)
     plt.title(title1, loc='center', pad=None)
-    epch = range(1, len(aval)+1)
-    plt.plot(epch, aval)
+    plt.plot(aval)
     plt.ylabel('acc')
     plt.xlabel('epoch')
     directories.filecheck('./plots/A2/Early_Stopping/{}.png'.format(title1))
@@ -124,7 +123,6 @@ def early_stopping(ep):
     title2 = 'Loss Crossentropy Model with Early Stopping {}-{}-10'.format(h1, h2)
     plt.title(title2, loc='center', pad=None)
     # validation loss
-    epch = range(1, len(lval+1))
     plt.plot(lval)
     # train loss
     plt.plot(ltrain)

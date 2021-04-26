@@ -28,7 +28,7 @@ def a4(ep):
     classes = 10
     loss_f = ['categorical_crossentropy', 'mean_squared_error']
     h1 = 794
-    h2 = 150
+    h2 = 50
     learning_rate = 0.1
     m = 0.6
     reg_factors = [0.1, 0.5, 0.9]
