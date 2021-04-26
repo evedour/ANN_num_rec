@@ -14,7 +14,7 @@ from tensorflow.keras.regularizers import l2
 from sklearn import preprocessing
 
 
-def a4():
+def a4(ep):
     # αρχικοποίηση directories αποθήκευσης
     directories.A4()
 
@@ -89,7 +89,7 @@ def a4():
                 print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
 
                 # fit μοντέλου
-                history = model.fit(xi_train, yi_train, epochs=10, batch_size=200, verbose=1,
+                history = model.fit(xi_train, yi_train, epochs=ep, batch_size=200, verbose=1,
                                     validation_data=(xi_test, yi_test),
                                     callbacks=[tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss', patience=2)])
 

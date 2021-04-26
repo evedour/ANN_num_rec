@@ -11,7 +11,7 @@ from sklearn.model_selection import KFold
 from sklearn import preprocessing
 
 
-def extra_layer():
+def extra_layer(ep):
     # αρχικοποίηση directories αποθήκευσης
     directories.extra_layer()
 
@@ -24,7 +24,7 @@ def extra_layer():
     features = 784
     classes = 10
     h1 = 794
-    h2 = [10, 50, 100, 150, 200, 397]
+    h2 = [10, 50, 150, 250]
 
     # φόρτωση mnist από το keras
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -91,7 +91,7 @@ def extra_layer():
             print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
 
             # fit μοντέλου
-            ce_history = model_ce.fit(xi_train, yi_train, epochs=10, batch_size=200, verbose=1,
+            ce_history = model_ce.fit(xi_train, yi_train, epochs=ep, batch_size=200, verbose=1,
                                       validation_data=(xi_test, yi_test))
 
             # στατιστικά
@@ -167,7 +167,7 @@ def extra_layer():
             print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
 
             # fit μοντέλου
-            mse_history = model_mse.fit(xi_train, yi_train, epochs=50, batch_size=200, verbose=1,
+            mse_history = model_mse.fit(xi_train, yi_train, epochs=ep, batch_size=200, verbose=1,
                                         validation_data=(xi_test, yi_test))
 
             # αποθήκευση validation metrics για τα plots

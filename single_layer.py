@@ -11,7 +11,7 @@ from sklearn.model_selection import KFold
 from sklearn import preprocessing
 
 
-def single_layer():
+def single_layer(ep):
     # αρχικοποίηση directories αποθήκευσης
     directories.single_layer()
     # GPU support
@@ -23,6 +23,7 @@ def single_layer():
     features = 784
     classes = 10
     h1 = [10, 397, 794]
+
     # φόρτωση mnist από το keras
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
@@ -86,7 +87,7 @@ def single_layer():
             print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
 
             # fit μοντέλου
-            ce_history = model_ce.fit(xi_train, yi_train, epochs=10, batch_size=200, verbose=1,
+            ce_history = model_ce.fit(xi_train, yi_train, epochs=ep, batch_size=200, verbose=1,
                                       validation_data=(xi_test, yi_test))
             # αποθήκευση validation metrics για τα plots
             aval.append(ce_history.history['val_accuracy'])
@@ -161,7 +162,7 @@ def single_layer():
             print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
 
             # fit μοντέλου
-            mse_history = model_mse.fit(xi_train, yi_train, epochs=50, batch_size=200, verbose=1,
+            mse_history = model_mse.fit(xi_train, yi_train, epochs=ep, batch_size=200, verbose=1,
                                         validation_data=(xi_test, yi_test))
             # αποθήκευση validation metrics για τα plots
             aval.append(mse_history.history['val_accuracy'])
