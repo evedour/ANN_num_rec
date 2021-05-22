@@ -174,3 +174,20 @@ def A5():
         folder_name = 'A5'
         folder = os.path.join('{}/plots'.format(parent), folder_name)
         os.mkdir(folder)
+########################################################################################################################
+########################################################################################################################
+#B2
+def B2():
+    if not(os.path.isdir('{}/logs'.format(parent))):
+        print('creating log files...')
+        folder_name = 'logs'
+        folder = os.path.join(parent, folder_name)
+        os.mkdir(folder)
+    if not (os.path.isdir('{}/logs/PART_B').format(parent)):
+        folder_name = 'PART_B'
+        folder = os.path.join('{}/logs'.format(parent), folder_name)
+        os.mkdir(folder)
+    if not (os.path.isdir('{}/logs/PART_B/B2'.format(parent))):
+        folder_name = 'B2'
+        folder = os.path.join('{}logs/PART_B'.format(parent), folder_name)
+        os.mkdir(folder)
