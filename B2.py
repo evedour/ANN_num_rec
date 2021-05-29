@@ -12,6 +12,7 @@ from sklearn import preprocessing
 import numpy as np
 import directories
 import sys
+import scipy
 
 directories.B2()
 # φόρτωση mnist από το keras
@@ -20,25 +21,17 @@ x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
 
 # κάνουμε το mnist reshape
-x_train = x_train.reshape(x_train.shape[0], 28, 28, 1)
-x_test = x_test.reshape(x_test.shape[0], 28, 28, 1)
+x_train = x_train.reshape(x_train.shape[0], 784)
+x_test = x_test.reshape(x_test.shape[0], 784)
 # x_train,test are now matrices of matrices
 
 # MinMax scaling
-myscaler(x_test)
-myscaler(x_train)
-
+scaler = preprocessing.MinMaxScaler()
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.fit_transform(x_test)
 # ορισμός των labels
-y_train = to_categorical(y_train, classes)
-y_test = to_categorical(y_test, classes)
-
-
-def myscaler(toscale):
-    scaler = preprocessing.MinMaxScaler()
-    for i in range(toscale.shape[0]):
-        for j in range(toscale.shape[1]):
-            toscale[i, j, :] = scaler.fit_transform(toscale[i, j, :])
-    print(toscale)
+y_train = to_categorical(y_train, 10)
+y_test = to_categorical(y_test, 10)
 
 
 def my_model(input_shape):
@@ -110,8 +103,9 @@ def main():
     generation_size = 15
     population_size = 784
     # create population randomly
-    population = [np.random.randint(0, 2, 9).tolist() for i in range(population_size)]
-
+    # population = [np.random.randint(0, 2, 9).tolist() for i in range(population_size)]
+    population = [scipy.sparse.random(28, 28, format='coo', data_rvs=np.ones, dtype='f') for i in range(population_size)]
+    print(population.shape)
     for gen in range(generation_size):
         fname = './logs/B2/results_gen{}.txt'.format(gen)
         directories.filecheck(fname)
