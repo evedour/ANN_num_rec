@@ -13,6 +13,25 @@ import numpy as np
 import directories
 import sys
 
+directories.B2()
+# φόρτωση mnist από το keras
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+x_train = x_train.astype('float32')
+x_test = x_test.astype('float32')
+
+# κάνουμε το mnist reshape
+x_train = x_train.reshape(x_train.shape[0], 28, 28, 1)
+x_test = x_test.reshape(x_test.shape[0], 28, 28, 1)
+# x_train,test are now matrices of matrices
+
+# MinMax scaling
+myscaler(x_test)
+myscaler(x_train)
+
+# ορισμός των labels
+y_train = to_categorical(y_train, classes)
+y_test = to_categorical(y_test, classes)
+
 
 def myscaler(toscale):
     scaler = preprocessing.MinMaxScaler()
@@ -22,19 +41,16 @@ def myscaler(toscale):
     print(toscale)
 
 
-def my_model(fl):
-    print(f'Μοντέλο CNN με ένα επίπεδο 32 φίλτρων {5}x{5}, 2x2 MaxPooling, 20% dropout και MLP {fl}:10')
+def my_model(input_shape):
     # model
+    # Δημιουργία μοντέλου με χρήση του keras API
     model = Sequential()
-    # first layer: Convolution 2D, 32 filters of size 5x5
-    model.add(Conv2D(32, (5, 5), input_shape=(28, 28, 1), activation='relu', kernel_initializer='he_uniform'))
-    # second layer: MaxPooling 2D, returns max value of image portion (2x2)
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    # third layer: Flatten results of previous layers to feed into the MLP
-    model.add(Flatten())
-    # fourth and output layer: our standard MLP
-    model.add(Dense(fl, kernel_initializer='he_uniform', activation='relu'))
-    model.add(Dense(10, kernel_initializer='he_uniform', activation='softmax'))
+    # Πρώτο κρυφό επίπεδο
+    model.add(Dense(384, input_shape=input_shape, activation='relu'))
+    # Δεύτερο κρυφό επίπεδο
+    model.add(Dense(50, activation='relu'))
+    # Επίπεδο εξόδου
+    model.add(Dense(10, activation='softmax'))
     # compile the model
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
@@ -69,30 +85,41 @@ def mutate(bitstring, mutate_factor):
             bitstring[i] = 1 - bitstring[i]
 
 
+def score(bitstring):
+    selected_features = []
+    idx = 0
+    for bit in range(bitstring):
+        if bit == 1:
+            selected_features.append(x_train[idx])
+    idx += 1
+    model = my_model((selected_features.shape, ))
+    model.compile(loss='categorical_crossentropy', optimizer=tensorflow.keras.optimizers.SGD(lr=0.1, momentum=0.6,
+                                                                                             decay=0.0, nesterov=False),
+                  metrics=['accuracy'])
+    fold = 1
+    loss_sum = 0
+    acc_sum = 0
+    aval = []
+    lval = []
+    ltrain = []
+
+
+
 def main():
-    # φόρτωση mnist από το keras
-    (x_train, y_train), (x_test, y_test) = mnist.load_data()
-    x_train = x_train.astype('float32')
-    x_test = x_test.astype('float32')
-
-    # κάνουμε το mnist reshape
-    x_train = x_train.reshape(x_train.shape[0], 28, 28, 1)
-    x_test = x_test.reshape(x_test.shape[0], 28, 28, 1)
-    # x_train,test are now matrices of matrices
-
-    # MinMax scaling
-    myscaler(x_test)
-    myscaler(x_train)
 
     generation_size = 15
     population_size = 784
+    # create population randomly
+    population = [np.random.randint(0, 2, 9).tolist() for i in range(population_size)]
 
-    population = [randint(0, 2, 9).tolist() for i in range(population_size)]
-    # TODO: population size research
     for gen in range(generation_size):
+        fname = './logs/B2/results_gen{}.txt'.format(gen)
+        directories.filecheck(fname)
+        f = open(fname, 'w')
+        sys.stdout = f
 
         # fitness of population
-        scores = [objective(c) for c in population]
+        scores = [score(c) for c in population]
 
         # select parents based on their fitness score
         selected = [tourney(pop, scores) for j in range(population_size)]
