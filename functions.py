@@ -14,6 +14,7 @@ from tensorflow.keras.utils import to_categorical
 from sklearn import preprocessing
 
 
+
 def my_model(input_shape):
     # model
     # Δημιουργία μοντέλου με χρήση του keras API
@@ -51,32 +52,35 @@ def fitness(population, x_train, x_test, y_train, y_test):
 
         print(f'Αποτελέσματα στο άτομο {i}: loss = {results[0]}, accuracy = {results[1]}')
         i += 1
-        return scores
+    return scores
 
 
 def select_parents(population, fit, amount):
-    fittest = []
-    for _ in range(amount):
-        parent_idx = np.where(fit == min(fit))
-        fittest.append(population[parent_idx])
+    fittest = np.empty((amount, population.shape[1]))
+    for parent in range(amount):
+        parent_idx = np.where(fit == np.min(fit))
+        parent_idx = parent_idx[0][0]
+        fittest[parent, :] = population[parent_idx, :]
         fit[parent_idx] = 99999999999
     return fittest
 
 
-def mate(p1, p2, crossrate):
-    child = p1.copy()
-    if random() < crossrate:
-        # mating is performed
+def mate(par, crossrate, amount):
+    child = np.empty(amount)
+    for i in range(par.shape[0]):
         # crossover point
-        crosspoint = randint(1, len(p1)-2)
-        child = p1[:crosspoint] + p2[crosspoint:]
+        crosspoint = np.random.randint(1, len(par[i])-2)
+        if np.random.rand() < crossrate:
+            # crossover is performed
+            child[i, 0:crosspoint] = par[i % par.shape[0], 0:crosspoint]
+            child[i, crosspoint:] = par[(i+1) % par.shape[0], crosspoint:]
 
     return child
 
 
 def mutate(individuals, mutrate):
-    mutation_idx = np.random.randint(low=0, high=individual.shape[1], size=2)
+    mutation_idx = np.random.randint(low=0, high=individuals.shape[1], size=2)
     for i in range(individuals.shape[0]):
-        if random() < mutrate:
+        if np.random.rand() < mutrate:
             individuals[i, mutation_idx] = 1 - individuals[i, mutation_idx]
     return individuals

@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import directories
 from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.datasets import mnist
 from sklearn import preprocessing
 import functions
 
@@ -33,22 +34,26 @@ num_gen = 5
 population = np.random.randint(low=0, high=2, size=(num_indiv, 784))
 
 for gen in range(num_gen):
+    print(f'Running generation number {gen}')
     # test population fitness
     fit = functions.fitness(population, x_train, x_test, y_train, y_test)
+
     # fit contains the losses for this generation's individuals
+    print(f'Gen {gen} fitness is {fit}')
 
     # select best individuals as parents
     parents = functions.select_parents(population, fit, 5)
+    print(f'Selected parents in gen {gen}: {parents}')
 
     # crossover
-    children = []
-    for i in len(parents):
-        if i < len(parents):
-            children.append(functions.mate(parent[i], parent[i+1], 1.0))
-        else:
-            break;
+    children = functions.mate(parents, 1.0, (population.shape[0]-parents.shape[0], 784))
+
+    print(f'Children in gen {gen} mating: {children}')
 
     mutated = functions.mutate(children, 0.1)
+    print(f'Mutations in gen {gen}: {mutated}')
 
     population[0:parents.shape[0], :] = parents
     population[parents.shape[0]:, :] = mutated
+
+    print(f'New population: {population} with size {population.shape}')
