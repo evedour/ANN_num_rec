@@ -14,7 +14,6 @@ from tensorflow.keras.utils import to_categorical
 from sklearn import preprocessing
 
 
-
 def my_model(input_shape):
     # model
     # Δημιουργία μοντέλου με χρήση του keras API
@@ -28,6 +27,7 @@ def my_model(input_shape):
     # compile the model
     model.compile(loss='categorical_crossentropy', optimizer=tensorflow.keras.optimizers.SGD(lr=0.1, momentum=0.6, decay=0.0, nesterov=False),
                   metrics=['accuracy'])
+
     return model
 
 
@@ -44,12 +44,13 @@ def fitness(population, x_train, x_test, y_train, y_test):
     for individual in population:
         selected_train = select_features(individual, x_train)
         selected_test = select_features(individual, x_test)
-        model = my_model((selected_train.shape[1],))
-        model.fit(selected_train, y_train, epochs=100, batch_size=200, verbose=1, validation_split=0.2, callbacks=[tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss', patience=2)])
+        model = my_model((None,))
+        # model = my_model()
+        model.load_weights('my_model_weights.h5')
+        # model.fit(selected_train, y_train, epochs=100, batch_size=200, verbose=1, validation_split=0.2, callbacks=[tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss', patience=2)])
         results = model.evaluate(selected_test, y_test, verbose=1)
         # TODO fix fitness function
         scores.append(results[0]*selected_train.shape[1])
-
         print(f'Αποτελέσματα στο άτομο {i}: loss = {results[0]}, accuracy = {results[1]}')
         i += 1
     return scores
