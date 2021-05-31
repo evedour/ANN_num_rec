@@ -1,10 +1,10 @@
 import tensorflow
 import matplotlib.pyplot as plt
 import numpy as np
+import directories
+from tensorflow.keras.utils import to_categorical
 from sklearn import preprocessing
 import functions
-import directories
-
 
 directories.B2()
 # φόρτωση mnist από το keras
@@ -29,10 +29,26 @@ y_test = to_categorical(y_test, 10)
 num_indiv = 10
 # number of generations
 num_gen = 5
-
-# TODO sparse matrix
+# generate first population randomly
 population = np.random.randint(low=0, high=2, size=(num_indiv, 784))
-scores = []
-x = []
 
-fit = functions.fitness(population, x_train, x_test, y_train, y_test)
+for gen in range(num_gen):
+    # test population fitness
+    fit = functions.fitness(population, x_train, x_test, y_train, y_test)
+    # fit contains the losses for this generation's individuals
+
+    # select best individuals as parents
+    parents = functions.select_parents(population, fit, 5)
+
+    # crossover
+    children = []
+    for i in len(parents):
+        if i < len(parents):
+            children.append(functions.mate(parent[i], parent[i+1], 1.0))
+        else:
+            break;
+
+    mutated = functions.mutate(children, 0.1)
+
+    population[0:parents.shape[0], :] = parents
+    population[parents.shape[0]:, :] = mutated
