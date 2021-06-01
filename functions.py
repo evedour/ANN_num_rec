@@ -7,19 +7,28 @@ import scipy
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import Flatten
-from tensorflow.keras.layers import Conv2D
-from tensorflow.keras.layers import MaxPooling2D
+from tensorflow.keras.layers import Lamda
 from tensorflow.keras.utils import to_categorical
 from sklearn import preprocessing
 
 
-def my_model(input_shape):
+def update_model(base, target):
+    baseweights = base.trainable_weights
+    targetweights = target.trainable_weights
+    # print(f'Base weights = {baseweights}')
+    for i in range(len(targetweights)):
+        targetweights[i] = baseweights[i]
+    # print(f'Target weights = {targetweights}')
+
+
+def my_model(mask):
     # model
     # Δημιουργία μοντέλου με χρήση του keras API
     model = Sequential()
     # Πρώτο κρυφό επίπεδο
-    model.add(Dense(794, input_shape=input_shape, activation='relu'))
+    # model.add(Dense(794, input_shape=input_shape, activation='relu'))
+    model.add(Dense(794,input_shape=(784,), activation='relu'))
+    model.add(Lamda(lamda x: x * mask))
     # Δεύτερο κρυφό επίπεδο
     model.add(Dense(50, activation='relu'))
     # Επίπεδο εξόδου
@@ -39,20 +48,22 @@ def select_features(chromosome, features):
 
 
 def fitness(population, x_train, x_test, y_train, y_test):
-    i = 1
-    scores = []
+    i = 0
+    scores = np.zeros(population.shape[0])
+    print(scores.shape)
     for individual in population:
         selected_train = select_features(individual, x_train)
         selected_test = select_features(individual, x_test)
-        model = my_model((None,))
-        # model = my_model()
-        model.load_weights('my_model_weights.h5')
+        a3model = my_model(individual)
+        a3model.build = True
+        a3model.load_weights('my_model_weights.h5')
+
         # model.fit(selected_train, y_train, epochs=100, batch_size=200, verbose=1, validation_split=0.2, callbacks=[tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss', patience=2)])
-        results = model.evaluate(selected_test, y_test, verbose=1)
+        results = a3model.evaluate(selected_test, y_test, verbose=1)
         # TODO fix fitness function
-        scores.append(results[0]*selected_train.shape[1])
+        scores[i] = results[0]*selected_train.shape[1]
         print(f'Αποτελέσματα στο άτομο {i}: loss = {results[0]}, accuracy = {results[1]}')
-        i += 1
+        i = i + 1
     return scores
 
 

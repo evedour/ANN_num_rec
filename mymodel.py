@@ -92,6 +92,7 @@ for loss_fun in loss_f:
         # εκτύπωση αποτελεσμάτων
         print(f'Συνολικά Αποτελέσματα - Loss {loss_sum / 5} - Accuracy {acc_sum / 5}')
         model.save_weights('./my_model_weights.h5')
+        tensorflow.keras.models.save_model(model, "my_model.h5", save_format="h5")
         # απελευθερωση μνημης
         print(f'Clearing session....')
         tensorflow.keras.backend.clear_session()
