@@ -6,7 +6,8 @@ import sys
 import scipy
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Activation
+from tensorflow.keras.layers import Lambda
 from tensorflow.keras.utils import to_categorical
 from sklearn import preprocessing
 import keras.backend as kb
@@ -15,16 +16,22 @@ import keras.backend as kb
 def update_model(base, target):
     baseweights = base.trainable_weights
     targetweights = target.trainable_weights
+    # print(f'Base weights = {baseweights}')
     for i in range(len(targetweights)):
         targetweights[i] = baseweights[i]
+    # print(f'Target weights = {targetweights}')
 
 
-def my_model(input_shape):
+def my_model(mask, bitstring):
     # model
     # Δημιουργία μοντέλου με χρήση του keras API
     model = Sequential()
     # Πρώτο κρυφό επίπεδο
-    model.add(Dense(794, input_shape=input_shape, activation='relu'))
+    # model.add(Dense(794, input_shape=input_shape, activation='relu'))
+    kb.set_value(mask, bitstring)
+    model.add(Dense(784, input_shape=(784,), activation='relu'))
+    model.add(Lambda(lambda x: x * mask))
+    model.add(Activation('relu'))
     # Δεύτερο κρυφό επίπεδο
     model.add(Dense(50, activation='relu'))
     # Επίπεδο εξόδου
@@ -47,15 +54,16 @@ def fitness(population, x_train, x_test, y_train, y_test):
     i = 0
     scores = np.zeros(population.shape[0])
     print(scores.shape)
+    mask = kb.variable([1]*784)
     for individual in population:
         selected_train = select_features(individual, x_train)
         selected_test = select_features(individual, x_test)
-        model = my_model((selected_train.shape[1], ))
-        model.build = True
-        model.load_weights('my_model_weights.h5')
+        a3model = my_model(mask, individual)
+        a3model.build = True
+        a3model.load_weights('my_model_weights.h5')
 
         # model.fit(selected_train, y_train, epochs=100, batch_size=200, verbose=1, validation_split=0.2, callbacks=[tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss', patience=2)])
-        results = model.evaluate(selected_test, y_test, verbose=1)
+        results = a3model.evaluate(x_test, y_test, verbose=1)
         # TODO fix fitness function
         scores[i] = results[0]*selected_train.shape[1]
         print(f'Αποτελέσματα στο άτομο {i}: loss = {results[0]}, accuracy = {results[1]}')
