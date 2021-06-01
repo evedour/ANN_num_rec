@@ -7,6 +7,8 @@ from tensorflow.keras.datasets import mnist
 from sklearn import preprocessing
 import functions
 
+
+print(f'Tensorflow version:{tensorflow.__version__}')
 directories.B2()
 # φόρτωση mnist από το keras
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -48,9 +50,8 @@ for iter in range(iterations):
         # test population fitness
         fit = functions.fitness(population, x_train, x_test, y_train, y_test)
         # fit contains the losses times the input amount for this generation's individuals
-        fittest = np.where(fit == np.min(fit))[0]
-        fittest = fittest[0]
-        avg.append(fit[fittest])
+        fittest = np.min(fit)
+        avg.append(fittest)
 
         # select best individuals as parents
         parents = functions.select_parents(population, fit, 5)
@@ -65,10 +66,9 @@ for iter in range(iterations):
 
     # Μετα την ολοκληρωση του for loop, θεωρητικα εχουμε το καλυτερο αποτελεσμα πληθυσμου
     fit = functions.fitness(population, x_train, x_test, y_train, y_test)
-    fittest = np.where(fit == np.min(fit))[0]
-    fittest = fittest[0]
-    avg.append(fit[fittest])
-    solution = population[fittest, :]
+    fittest = np.min(fit)
+    avg.append(fittest)
+    solution = population[np.where(fit==np.min(fit))]
     solution_idx = np.where(solution == 1)[0]
 
     average = fittest/num_gen
