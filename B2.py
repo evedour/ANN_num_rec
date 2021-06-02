@@ -35,12 +35,16 @@ num_indiv = 20
 # αριθμός γενεών
 num_gen = 999
 # πιθανότητα διασταύρωσης
-crossrate = 0.6
+cross = [0.9, 0.1]
 # πιθανοτητα μετάλλαξης
-mut = [0.00, 0.01, 0.10]
+mutrate = 0.01
 population = np.ones((num_indiv, 784))
 
-for mutrate in mut:
+for crossrate in cross:
+    fname = "./logs/B2/results_{}_{}_{}.txt".format(num_indiv, cross, mutrate)
+    directories.filecheck(fname)
+    f = open(fname, 'w')
+    sys.stdout = f
     for iter in range(iterations):
         big_avg = []
         best_results_gen = []
@@ -106,5 +110,8 @@ for mutrate in mut:
         big_avg.clear()
 
     print(f'Clearing session....')
+    # επιστροφή stdout στην κονσόλα
+    f.close()
+    sys.stdout = sys.__stdout__
     tensorflow.keras.backend.clear_session()
     plt.close(1)
