@@ -101,6 +101,7 @@ for mutrate in mut:
         plt.xlabel('Γενεές')
         directories.filecheck('./plots/{}.png'.format(title))
         plt_evolution.savefig('./plots/{}.png'.format(title), format='png')
+        plt.close(1)
         avg.clear()
         big_avg.clear()
 
