@@ -6,6 +6,7 @@ from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.datasets import mnist
 from sklearn import preprocessing
 import functions
+import sys
 
 
 print(f'Tensorflow version:{tensorflow.__version__}')
@@ -35,13 +36,13 @@ num_indiv = 20
 # αριθμός γενεών
 num_gen = 999
 # πιθανότητα διασταύρωσης
-cross = [0.9, 0.1]
+crossrate = 0.6
 # πιθανοτητα μετάλλαξης
-mutrate = 0.01
+mut = [0.00, 0.01, 0.10]
 population = np.ones((num_indiv, 784))
 
-for crossrate in cross:
-    fname = "./logs/B2/results_{}_{}_{}.txt".format(num_indiv, cross, mutrate)
+for mutrate in mut:
+    fname = "logs/PART_B/B2/results_{}_{}_{}.txt".format(num_indiv, crossrate, mutrate)
     directories.filecheck(fname)
     f = open(fname, 'w')
     sys.stdout = f
