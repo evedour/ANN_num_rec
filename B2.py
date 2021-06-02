@@ -29,7 +29,7 @@ y_train = to_categorical(y_train, 10)
 y_test = to_categorical(y_test, 10)
 
 iterations = 9
-
+gens = 1
 # μέγεθος πληθυσμού
 num_indiv = 20
 # αριθμός γενεών
