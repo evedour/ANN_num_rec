@@ -13,7 +13,7 @@ A4    | [**A4.py**](https://github.com/evedour/ANN_num_rec/blob/master/A4.py)
 A5    | [**A5.py**](https://github.com/evedour/ANN_num_rec/blob/master/A5.py)
 A5-dropout|[**A5_dropout.py**](https://github.com/evedour/ANN_num_rec/blob/master/A5_dropout.py)
 
-### ΜΕΡΟΣ  b
+### ΜΕΡΟΣ Β
 
 Ερώτημα   |   Υλοποίηση
 --- | ---
