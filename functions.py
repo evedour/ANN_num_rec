@@ -1,22 +1,11 @@
 import tensorflow
-import matplotlib.pyplot as plt
 import numpy as np
+import math
 import directories
-import sys
-import scipy
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.utils import to_categorical
 from sklearn import preprocessing
-import keras.backend as kb
-
-
-def update_model(base, target):
-    baseweights = base.trainable_weights
-    targetweights = target.trainable_weights
-    for i in range(len(targetweights)):
-        targetweights[i] = baseweights[i]
 
 
 def my_model(input_shape):
@@ -30,6 +19,8 @@ def my_model(input_shape):
     # Επίπεδο εξόδου
     model.add(Dense(10, activation='softmax'))
     # compile the model
+    model.load_weights('my_model_weights.h5')
+    # model = tensorflow.keras.models.load_model('my_model.h5')
     model.compile(loss='categorical_crossentropy', optimizer=tensorflow.keras.optimizers.SGD(lr=0.1, momentum=0.6, decay=0.0, nesterov=False),
                   metrics=['accuracy'])
 
@@ -39,27 +30,29 @@ def my_model(input_shape):
 def select_features(chromosome, features):
     # Find the indexes where we keep the features and create a new feature vector
     idx = np.where(chromosome == 1)[0]
-    selected_feats = features[:, idx]
+    selected_feats = np.zeros(features.shape)
+    selected_feats[:, idx] = selected_feats[:, idx] + features[:, idx]
     return selected_feats
 
 
-def fitness(population, x_train, x_test, y_train, y_test):
+def fitness(population, x_test,  y_test):
     i = 0
     scores = np.zeros(population.shape[0])
-    print(scores.shape)
     for individual in population:
-        selected_train = select_features(individual, x_train)
         selected_test = select_features(individual, x_test)
-        model = my_model((selected_train.shape[1], ))
-        model.build = True
-        model.load_weights('my_model_weights.h5')
-
+        sze = np.where(individual == 1)[0]
+        penalty = sze.shape[0]
+        print(f'Penalty={penalty}')
+        model = my_model((784, ))
         # model.fit(selected_train, y_train, epochs=100, batch_size=200, verbose=1, validation_split=0.2, callbacks=[tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss', patience=2)])
         results = model.evaluate(selected_test, y_test, verbose=1)
-        # TODO fix fitness function
-        scores[i] = results[0]*selected_train.shape[1]
-        print(f'Αποτελέσματα στο άτομο {i}: loss = {results[0]}, accuracy = {results[1]}')
+        # fitness func
+        # scores[i] = results[0] + math.exp(penalty)
+        scores[i] = results[0] * ( -1 * ((1/(math.sqrt(2*3.14*1.0))) * (-pow((penalty-392), 2)/(2*1.0))))
+        print(f'Αποτελέσματα στο άτομο {i}: loss = {results[0]}, score = {scores[i]}')
         i = i + 1
+        results.clear()
+
     return scores
 
 
@@ -70,11 +63,12 @@ def select_parents(population, fit, amount):
         parent_idx = parent_idx[0][0]
         fittest[parent, :] = population[parent_idx, :]
         fit[parent_idx] = 99999999999
+
     return fittest
 
 
 def mate(par, crossrate, amount):
-    child = np.empty(amount)
+    child = np.empty(amount) # 15 x 784
     for i in range(par.shape[0]):
         # crossover point
         crosspoint = np.random.randint(1, len(par[i])-2)
@@ -91,4 +85,5 @@ def mutate(individuals, mutrate):
     for i in range(individuals.shape[0]):
         if np.random.rand() < mutrate:
             individuals[i, mutation_idx] = 1 - individuals[i, mutation_idx]
+
     return individuals
