@@ -18,7 +18,7 @@ A5-dropout|[**A5_dropout.py**](https://github.com/evedour/ANN_num_rec/blob/maste
 Ερώτημα   |   Υλοποίηση
 --- | ---
 B2 | [**B2.py**](https://github.com/evedour/ANN_num_rec/blob/master/B2.py)
-συναρτήσεις που χρησιμοποιήθηκαν στο Β2  | [**functions.py**](https://github.com/evedour/ANN_num_rec/blob/master/functions.py)
+μέθοδοι γενετικού αλγορίθμου  | [**functions.py**](https://github.com/evedour/ANN_num_rec/blob/master/functions.py)
 βάρη μοντέλου   | [**my_model_weights.h5**](https://github.com/evedour/ANN_num_rec/blob/master/my_model_weights.h5)
 αποθηκευμένο μοντέλο    | [**my_model.h5**](https://github.com/evedour/ANN_num_rec/blob/master/my_model.h5)
 δημιουργία μοντέλου    | [**model.py**](https://github.com/evedour/ANN_num_rec/blob/master/mymodel.py)
