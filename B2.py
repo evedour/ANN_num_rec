@@ -59,7 +59,7 @@ for mutrate in mut:
             # test population fitness
             fit = functions.fitness(population, x_test, y_test)
             # fit contains the losses times the input amount for this generation's individuals
-            fittest = np.max(fit)
+            fittest = np.min(fit)
             elit = population[np.where(fit == fittest)]
             best_results_gen.append(fittest)
             if gen > 0:
@@ -88,9 +88,9 @@ for mutrate in mut:
 
         # Μετά την ολοκλήρωση του for loop, θεωρητικά έχουμε το καλύτερο αποτέλεσμα πληθυσμού
         fit = functions.fitness(population, x_test, y_test)
-        fittest = np.max(fit)
+        fittest = np.min(fit)
         avg.append(fittest)
-        solution = population[np.where(fit == np.max(fit))]
+        solution = population[np.where(fit == np.min(fit))]
         solution_idx = np.where(solution == 1)[0]
         average = 0
         for i in range(len(avg)):
