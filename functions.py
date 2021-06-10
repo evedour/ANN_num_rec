@@ -62,10 +62,10 @@ def select_parents(population, fit, k):
     for i in np.random.randint(0, population.shape[0], 2):
         # τουρνουά ( ο πιο fit επιλέγεται )
         if np.random.random() < k:
-            if fit[i] > fit[selection_i]:
+            if fit[i] < fit[selection_i]:
                 selection_i = i
         else:
-            if fit[i] < fit[selection_i]:
+            if fit[i] > fit[selection_i]:
                 selection_i = i
 
     return population[selection_i]
@@ -73,14 +73,24 @@ def select_parents(population, fit, k):
 
 def mate(par, crossrate):
     child = np.zeros(par.shape).astype(int)
-    for i in range(par.shape[0]):
+    for i in range(0, par.shape[0], 2):
         # crossover point
+        crosspointA = np.random.randint(1, len(par[i])-2)
         crosspoint = np.random.randint(1, len(par[i])-2)
+        while crosspoint == crosspointA:
+            crosspoint = np.random.randint(1, len(par[i]) - 2)
+        if crosspointA > crosspoint:
+            # το Α ειναι πιο πριν από το Β
+            crosspointB = crosspoint
+        else:
+            crosspointB = crosspointA
+            crosspointA = crosspoint
+
         if np.random.rand() < crossrate:
             # crossover is performed
-            child[i, 0:crosspoint] = par[i % par.shape[0], 0:crosspoint]
-            child[i, crosspoint:] = par[(i+1) % par.shape[0], crosspoint:]
-
+            child[i, crosspointA:crosspointB] = par[i % par.shape[0], crosspointA:crosspointB]
+            child[i, :crosspointA] = par[(i+1) % par.shape[0], :crosspointA]
+            child[i, crosspointB:] = par[(i+1) % par.shape[0], crosspointB:]
     return child
 
 
