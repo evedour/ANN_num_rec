@@ -6,6 +6,7 @@ from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from sklearn import preprocessing
+from math import exp
 
 
 def my_model(input_shape):
@@ -44,11 +45,10 @@ def fitness(population, x_test,  y_test):
         penalty = sze.shape[0]
         print(f'Penalty={penalty}')
         model = my_model((784, ))
-        # model.fit(selected_train, y_train, epochs=100, batch_size=200, verbose=1, validation_split=0.2, callbacks=[tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss', patience=2)])
         results = model.evaluate(selected_test, y_test, verbose=1)
         # fitness func
-        # scores[i] = results[0] + math.exp(penalty)
-        scores[i] = results[0] + ( -1 * ((1/(math.sqrt(2*3.14*1.0))) * (-pow((penalty-392), 2)/(2*1.0))))
+        x = penalty/784
+        scores[i] = results[0] + 1/(1 + exp(-(x - 0.5)*10))
         print(f'Αποτελέσματα στο άτομο {i}: loss = {results[0]}, score = {scores[i]}')
         i = i + 1
         results.clear()
@@ -56,19 +56,23 @@ def fitness(population, x_test,  y_test):
     return scores
 
 
-def select_parents(population, fit, amount):
-    fittest = np.empty((amount, population.shape[1]))
-    for parent in range(amount):
-        parent_idx = np.where(fit == np.min(fit))
-        parent_idx = parent_idx[0][0]
-        fittest[parent, :] = population[parent_idx, :]
-        fit[parent_idx] = 99999999999
+def select_parents(population, fit, k):
+    selection_i = np.random.randint(population.shape[0])
+    # επιλογή 2 τυχαίων γονέων
+    for i in np.random.randint(0, population.shape[0], 2):
+        # τουρνουά ( ο πιο fit επιλέγεται )
+        if np.random.random() < k:
+            if fit[i] > fit[selection_i]:
+                selection_i = i
+        else:
+            if fit[i] < fit[selection_i]:
+                selection_i = i
 
-    return fittest
+    return population[selection_i]
 
 
-def mate(par, crossrate, amount):
-    child = np.empty(amount) # 15 x 784
+def mate(par, crossrate):
+    child = np.zeros(par.shape).astype(int)
     for i in range(par.shape[0]):
         # crossover point
         crosspoint = np.random.randint(1, len(par[i])-2)

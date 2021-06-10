@@ -32,7 +32,7 @@ y_test = to_categorical(y_test, 10)
 iterations = 9
 gens = 1
 # μέγεθος πληθυσμού
-num_indiv = 20
+num_indiv = 19
 # αριθμός γενεών
 num_gen = 999
 # πιθανότητα διασταύρωσης
@@ -51,7 +51,6 @@ for mutrate in mut:
         best_results_gen = []
         # generate first population randomly
         population = np.random.randint(low=0, high=2, size=(num_indiv, 784))
-        print(population)
         avg = []
         count = 0
         j = 0
@@ -60,25 +59,28 @@ for mutrate in mut:
             # test population fitness
             fit = functions.fitness(population, x_test, y_test)
             # fit contains the losses times the input amount for this generation's individuals
-            fittest = np.min(fit)
+            fittest = np.max(fit)
+            elit = population[np.where(fit == fittest)]
             best_results_gen.append(fittest)
             if gen > 0:
-                if best_results_gen[j] == best_results_gen[j-1] or best_results_gen[j] < best_results_gen[j-1] - 0.01*best_results_gen[j-1]:
+                if best_results_gen[j] == best_results_gen[j-1] or best_results_gen[j] < best_results_gen[j-1] - 0.01 * best_results_gen[j-1]:
                     count += 1
             avg.append(fittest)
 
             # select best individuals as parents
-            parents = functions.select_parents(population, fit, 5)
+            parents = np.zeros(population.shape)
+            for i in range(0, num_indiv):
+                parents[i, :] = functions.select_parents(population, fit, 0.75)
 
             # crossover
-            children = functions.mate(parents, crossrate, amount=(population.shape[0]-parents.shape[0], 784))
+            children = functions.mate(parents.astype(int), crossrate)
             # mutate
             mutated = functions.mutate(children, mutrate)
 
-            population[0:parents.shape[0], :] = parents
-            population[parents.shape[0]:, :] = mutated
+            population = mutated
+            population[0, :] = elit[0, :]
             j += 1
-            if count > 10:
+            if count > 3:
                 print(f'Μηδενική ή πολύ μικρή βελτίωση ατόμου, επόμενο τρέξιμο αλγορίθμου:')
                 gens = gen
                 break
@@ -86,14 +88,14 @@ for mutrate in mut:
 
         # Μετά την ολοκλήρωση του for loop, θεωρητικά έχουμε το καλύτερο αποτέλεσμα πληθυσμού
         fit = functions.fitness(population, x_test, y_test)
-        fittest = np.min(fit)
+        fittest = np.max(fit)
         avg.append(fittest)
-        solution = population[np.where(fit == np.min(fit))]
+        solution = population[np.where(fit == np.max(fit))]
         solution_idx = np.where(solution == 1)[0]
         average = 0
         for i in range(len(avg)):
             average += avg[i]
-        average = average/gens
+        average = average / gens
         print(f'{iter}Μέσος όρος απόδοσης για πληθυσμό μεγέθους {num_indiv}, πιθανότητα διασταύρωσης {crossrate} και πιθανότητα μετάλλαξης {mutrate} = {average}')
         big_avg.append(average)
 
