@@ -41,7 +41,7 @@ num_gen = 999
 # πιθανότητα διασταύρωσης
 crossrate = 0.6
 # πιθανοτητα μετάλλαξης
-mut = [0.10]
+mut = [0.00, 0.01, 0.10]
 population = np.ones((num_indiv, 784))
 
 for mutrate in mut:
@@ -49,6 +49,8 @@ for mutrate in mut:
     directories.filecheck(fname)
     f = open(fname, 'w')
     sys.stdout = f
+    solution = np.empty[iterations, 784]
+    solution_scores = np.empty[iterations]
     for iter in range(iterations):
         big_avg = []
         best_results_gen = []
@@ -93,11 +95,10 @@ for mutrate in mut:
         fit = functions.fitness(population, x_test, y_test)
         fittest = np.min(fit)
         avg.append(fittest)
-        solution = population[np.where(fit == np.min(fit))]
+        solution[iter, :] = population[np.where(fit == np.min(fit))]
         solution_idx = np.where(solution == 1)[0]
-        f_sol = "logs/PART B/B2/solution for{}_{}_{}_iter{}.txt".format(num_indiv, crossrate, mutrate, iter)
-        directories.filecheck(f_sol)
-        print(solution, file=f_sol)
+        solution_scores[iter] = fit[np.where(fit == fittest)]
+
         average = 0
         for i in range(len(avg)):
             average += avg[i]
@@ -117,6 +118,13 @@ for mutrate in mut:
         plt.close(1)
         avg.clear()
         big_avg.clear()
+    f_sol = "logs/PART B/B2/solutions for {}_{}_{}.txt".format(num_indiv, crossrate, mutrate)
+    f_fit = "logs/PARTB/B2/solution scores for {}_{}_{}.txt".format(num_indiv, crossrate, mutrate)
+    directories.filecheck(f_sol)
+    directories.filecheck(fit)
+    # save solution for later use
+    np.save(f_sol, solutions)
+    np.save(f_fit, solution_scores)
 
     print(f'Clearing session....')
     # επιστροφή stdout στην κονσόλα
