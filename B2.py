@@ -11,6 +11,9 @@ import sys
 
 print(f'Tensorflow version:{tensorflow.__version__}')
 directories.B2()
+np.set_printoptions(threshold=np.inf)
+
+
 # φόρτωση mnist από το keras
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 x_train = x_train.astype('float32')
@@ -38,7 +41,7 @@ num_gen = 999
 # πιθανότητα διασταύρωσης
 crossrate = 0.6
 # πιθανοτητα μετάλλαξης
-mut = [0.00, 0.01, 0.10]
+mut = [0.10]
 population = np.ones((num_indiv, 784))
 
 for mutrate in mut:
@@ -92,6 +95,9 @@ for mutrate in mut:
         avg.append(fittest)
         solution = population[np.where(fit == np.min(fit))]
         solution_idx = np.where(solution == 1)[0]
+        f_sol = "logs/PART B/B2/solution for{}_{}_{}_iter{}.txt".format(num_indiv, crossrate, mutrate, iter)
+        directories.filecheck(f_sol)
+        print(solution, file=f_sol)
         average = 0
         for i in range(len(avg)):
             average += avg[i]
