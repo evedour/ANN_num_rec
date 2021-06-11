@@ -37,7 +37,7 @@ gens = 1
 # μέγεθος πληθυσμού
 num_indiv = 19
 # αριθμός γενεών
-num_gen = 999
+num_gen = 9
 # πιθανότητα διασταύρωσης
 crossrate = 0.6
 # πιθανοτητα μετάλλαξης
@@ -49,8 +49,8 @@ for mutrate in mut:
     directories.filecheck(fname)
     f = open(fname, 'w')
     sys.stdout = f
-    solution = np.empty[iterations, 784]
-    solution_scores = np.empty[iterations]
+    solution = np.empty((iterations, 784))
+    solution_scores = np.empty((iterations, ))
     for iter in range(iterations):
         big_avg = []
         best_results_gen = []
@@ -95,8 +95,10 @@ for mutrate in mut:
         fit = functions.fitness(population, x_test, y_test)
         fittest = np.min(fit)
         avg.append(fittest)
-        solution[iter, :] = population[np.where(fit == np.min(fit))]
-        solution_idx = np.where(solution == 1)[0]
+        sol = population[np.where(fit == np.min(fit))]
+        solution[iter, :] = sol[0, :].astype(int)
+        idx = np.where(solution == 1)[0]
+        solution_idx = idx[0]
         solution_scores[iter] = fit[np.where(fit == fittest)]
 
         average = 0
