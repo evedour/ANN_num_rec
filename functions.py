@@ -29,7 +29,7 @@ def my_model(input_shape):
 
 
 def select_features(chromosome, features):
-    # Find the indexes where we keep the features and create a new feature vector
+    # Εύρεση δεικτών προς τα χαρακτηριστικά που κρατάμε
     idx = np.where(chromosome == 1)[0]
     selected_feats = np.zeros(features.shape)
     selected_feats[:, idx] = selected_feats[:, idx] + features[:, idx]
@@ -48,7 +48,7 @@ def fitness(population, x_test,  y_test):
         results = model.evaluate(selected_test, y_test, verbose=1)
         # fitness func
         x = penalty/784
-        scores[i] = 1/(1+results[0]) + 1/(1 + exp(-(x - 0.5)*10))
+        scores[i] = results[0] + 1/(1 + exp(-(x - 0.5)*10))
         print(f'Αποτελέσματα στο άτομο {i}: loss = {results[0]}, score = {scores[i]}')
         i = i + 1
         results.clear()

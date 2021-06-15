@@ -50,44 +50,49 @@ mut = [0.00, 0.01, 0.10]
 population = np.ones((num_indiv, 784))
 
 # μετρησεις:
-# fit =  fitness scores για τη καθε γενια
-# fittest = το καλύτερο σκορ στη γενια
+# fit =  fitness scores για τη κάθε γενιά
+# fittest = το καλύτερο σκορ στη γενιά
 # best results gen = λίστα των καλύτερων σκορ κάθε γενιάς για κάθε τρέξιμο του αλγορίθμου (χρησιμοποιείται στο να ελέγχεται το ποσοστό βελτίωσης σε κάθε τρέξιμο)
-# big avg = λίστα όπου αποθηκεύονται οι μέσοι όροι αποδόσεων για κάθε τρέξιμο του αλγορίθμου
+# fitness_history = κάθε γραμμή πίνακα αποθηκεύει ανα γενιά την καλύτερη απόδοση του αλγορίθμου στο αντίστοιχο τρέξιμο
 
 for mutrate in mut:
-    # ανοιγμα αρχειου αποθηκευσης
+
+    # άνοιγμα αρχειου αποθηκευσης
     fname = "logs/PART_B/B2/results_{}_{}_{}.txt".format(num_indiv, crossrate, mutrate)
     directories.filecheck(fname)
     f = open(fname, 'w')
     sys.stdout = f
-    # αρχικοποιησεις
+
+    # αρχικοποιήσεις
     solution = np.empty((iterations, 784))
     solution_scores = np.empty((iterations, ))
-    big_avg = []
     plt_evolution = plt.figure(1)
+    fitness_history = np.zeros((10, num_gen))
+    gens_needed = []
+    average = 0
+
+    # GA
     for iter in range(iterations):
         best_results_gen = []
-        # generate first population randomly
+
+        # ο αρχικός πληθυσμός παράγεται τυχαία
         population = np.random.randint(low=0, high=2, size=(num_indiv, 784))
-        avg = []
         count = 0
         j = 0
-        for gen in range(num_gen):
-            print(f'Running generation number {gen} (iteration number {iter})')
-            # test population fitness
-            fit = functions.fitness(population, x_test, y_test)
-            # fit contains the losses times the input amount for this generation's individuals
-            fittest = np.max(fit)
-            elit = population[np.where(fit == fittest)]
 
+        for gen in range(num_gen)-1:
+            print(f'Running generation number {gen} (iteration number {iter})')
+            # population fitness
+            fit = functions.fitness(population, x_test, y_test)
+            fittest = np.min(fit)
+            elit = population[np.where(fit == fittest)]
+            fitness_history[iter, gen] = fittest
             best_results_gen.append(fittest)
             if gen > 0:
                 if best_results_gen[j] == best_results_gen[j-1] or best_results_gen[j] < best_results_gen[j-1] - 0.01 * best_results_gen[j-1]:
                     count += 1
-            avg.append(fittest)
 
-            # select best individuals as parents
+            # επιλογή γονέων
             parents = np.zeros(population.shape)
             for i in range(0, num_indiv):
                 parents[i, :] = functions.select_parents(population, fit, 0.75)
@@ -108,44 +113,35 @@ for mutrate in mut:
 
         # Μετά την ολοκλήρωση του for loop, θεωρητικά έχουμε το καλύτερο αποτέλεσμα πληθυσμού
         fit = functions.fitness(population, x_test, y_test)
-        fittest = np.max(fit)
-        avg.append(fittest)
+        fittest = np.min(fit)
+        fitness_history[iter, gen] = fittest
         gens += 1
+        gens_needed.append(gens)
+        average += fittest
 
-        # plot fitness evolution for best population for current iteration
-        plt.plot(np.arange(len(fit)), fit, label=f'iteration {i}')
-        plt.legend(f'iteration {iter}')
-        average = 0
-        for i in range(len(avg)):
-            average += avg[i]
-        average = average / gens
-        print(f'Τρέξιμο νούμερο {iter} | Μέσος όρος απόδοσης για πληθυσμό μεγέθους {num_indiv}, πιθανότητα διασταύρωσης {crossrate} και πιθανότητα μετάλλαξης {mutrate} = {average}')
-        big_avg.append(average)
+    print(f'Αποτελέσματα για πληθυσμό {num_indiv} ατόμων, με crossover rate = {crossrate} και mutation rate = {mutrate}: Μέσος όρος απόδοσης βέλτιστου ανα τρέξιμο= {average/10}')
+    print(f'Κατά μέσο όρο χρειάστηκαν {sum(gens_needed) / 10}')
 
-    title1 = f"Fitness evolution, {num_indiv}_{crossrate}_{mutrate}"
-    directories.filecheck('./plots/{}.png'.format(title1))
-    plt_evolution.savefig('./plots/{}.png'.format(title1), format='png')
-    plt.close(1)
+    evolution = []
+    for i in range(num_gen):
+        evolution.append(sum(fitness_history[:, num_gen])/10)
 
-    # plot averages for all iterations
-    plt_avgs = plt.figure(2)
-    title = "Μέσος όρος καλύτερων σκορ pop{} c_rate{} mut_rate{}".format(num_indiv, crossrate, mutrate)
-    plt.title(title, loc='center', pad=None)
-    plt.plot(big_avg)
-    plt.ylabel('Score')
-    plt.xlabel('Iteration')
+    # PLOTS
+    plt_evolution = plt.figure(1)
+    title = f"Εξέλιξη πληθυσμού {num_indiv} ατόμων για c_rate = {crossrate} και m_rate = {mutrate}"
+    plt.plot(evolution)
+    plt.ylabel('Απόδοση')
+    plt.xlabel('Γενιά')
     directories.filecheck('./plots/{}.png'.format(title))
-    plt_avgs.savefig('./plots/{}.png'.format(title), format='png')
-    plt.close(2)
-    avg.clear()
-    big_avg.clear()
+    plt_evolution.savefig('./plots/{}.png'.format(title), format='png')
+
+    # SOLUTIONS
     f_sol = "logs/PART_B/B2/solutions for {}_{}_{}.txt".format(num_indiv, crossrate, mutrate)
     f_fit = "logs/PART_B/B2/solution scores for {}_{}_{}.txt".format(num_indiv, crossrate, mutrate)
     directories.filecheck(f_sol)
     directories.filecheck(f_fit)
-
     # save solution for later use
-    sol = population[np.where(fit == np.max(fit))]
+    sol = population[np.where(fit == np.min(fit))]
     solution[iter, :] = sol[0, :].astype(int)
     solution_scores[iter] = np.amin(fit)
     np.save(f_sol, solution)
