@@ -48,7 +48,7 @@ def fitness(population, x_test,  y_test):
         results = model.evaluate(selected_test, y_test, verbose=1)
         # fitness func
         x = penalty/784
-        scores[i] = results[0] + 1/(1 + exp(-(x - 0.5)*10))
+        scores[i] = 1/(1+results[0]) + 1/(1 + exp(-(x - 0.5)*10))
         print(f'Αποτελέσματα στο άτομο {i}: loss = {results[0]}, score = {scores[i]}')
         i = i + 1
         results.clear()
