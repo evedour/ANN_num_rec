@@ -41,11 +41,13 @@ gens = 1
 num_indiv = 20
 # αριθμός γενεών
 num_gen = 1000
+
 # πιθανότητα διασταύρωσης
 # cross = [0.9, 0.1]
 crossrate = 0.6
+
 # πιθανοτητα μετάλλαξης
-mut = [0.00, 0.01, 0.10]
+mut = [0.00]
 # mutrate = 0.01
 population = np.ones((num_indiv, 784))
 
@@ -80,7 +82,7 @@ for mutrate in mut:
         count = 0
         j = 0
 
-        for gen in range(num_gen)-1:
+        for gen in range(num_gen-1):
             print(f'Running generation number {gen} (iteration number {iter})')
             # population fitness
             fit = functions.fitness(population, x_test, y_test)
