@@ -57,7 +57,7 @@ population = np.ones((num_indiv, 784))
 # best results gen = λίστα των καλύτερων σκορ κάθε γενιάς για κάθε τρέξιμο του αλγορίθμου (χρησιμοποιείται στο να ελέγχεται το ποσοστό βελτίωσης σε κάθε τρέξιμο)
 # fitness_history = κάθε γραμμή πίνακα αποθηκεύει ανα γενιά την καλύτερη απόδοση του αλγορίθμου στο αντίστοιχο τρέξιμο
 
-for mutrate in mut:
+for crossrate in cross:
 
     # άνοιγμα αρχειου αποθηκευσης
     fname = "logs/PART_B/B2/results_{}_{}_{}.txt".format(num_indiv, crossrate, mutrate)
