@@ -38,17 +38,17 @@ y_test = to_categorical(y_test, 10)
 iterations = 10
 gens = 0
 # μέγεθος πληθυσμού
-num_indiv = 200
+num_indiv = 20
 # αριθμός γενεών
 num_gen = 1000
 
 # πιθανότητα διασταύρωσης
-# cross = [0.9, 0.1]
+cross = [0.9, 0.1]
 crossrate = 0.6
 
 # πιθανοτητα μετάλλαξης
-mut = [0.00]
-# mutrate = 0.01
+# mut = [0.00, 0.01, 0.10]
+mutrate = 0.01
 population = np.ones((num_indiv, 784))
 
 # μετρησεις:
@@ -107,7 +107,7 @@ for mutrate in mut:
             population = mutated
             population[0, :] = elit[0, :]
             j += 1
-            if count > 3:
+            if count > 5:
                 print(f'Μηδενική ή πολύ μικρή βελτίωση ατόμου, επόμενο τρέξιμο αλγορίθμου:')
                 gens = gen
                 break
@@ -126,15 +126,16 @@ for mutrate in mut:
 
     evolution = []
     for i in range(max(gens_needed)):
-        evolution = (np.mean(fitness_history, axis=0))
+        evolution.append(np.mean(fitness_history[:, i], axis=0))
 
     # επιστροφή stdout στην κονσόλα
     f.close()
     sys.stdout = sys.__stdout__
-    print(evolution)
+
     # PLOTS
     plt_evolution = plt.figure(1)
     title = f"Εξέλιξη πληθυσμού {num_indiv} ατόμων για c_rate = {crossrate} και m_rate = {mutrate}"
+    plt.title(title, loc='center', pad=None)
     plt.plot(evolution)
     plt.ylabel('Απόδοση')
     plt.xlabel('Γενιά')
