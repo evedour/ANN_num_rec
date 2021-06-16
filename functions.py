@@ -22,7 +22,7 @@ def my_model(input_shape):
     # compile the model
     model.load_weights('my_model_weights.h5')
     # model = tensorflow.keras.models.load_model('my_model.h5')
-    model.compile(loss='categorical_crossentropy', optimizer=tensorflow.keras.optimizers.SGD(lr=0.1, momentum=0.6, decay=0.0, nesterov=False),
+    model.compile(loss='categorical_crossentropy', optimizer=tensorflow.keras.optimizers.SGD(learning_rate=0.1, momentum=0.6, decay=0.0, nesterov=False),
                   metrics=['accuracy'])
 
     return model

@@ -36,9 +36,9 @@ y_train = to_categorical(y_train, 10)
 y_test = to_categorical(y_test, 10)
 
 iterations = 10
-gens = 1
+gens = 0
 # μέγεθος πληθυσμού
-num_indiv = 20
+num_indiv = 200
 # αριθμός γενεών
 num_gen = 1000
 
@@ -116,18 +116,22 @@ for mutrate in mut:
         # Μετά την ολοκλήρωση του for loop, θεωρητικά έχουμε το καλύτερο αποτέλεσμα πληθυσμού
         fit = functions.fitness(population, x_test, y_test)
         fittest = np.min(fit)
-        fitness_history[iter, gen] = fittest
+        fitness_history[iter, gen+1] = fittest
         gens += 1
         gens_needed.append(gens)
         average += fittest
 
     print(f'Αποτελέσματα για πληθυσμό {num_indiv} ατόμων, με crossover rate = {crossrate} και mutation rate = {mutrate}: Μέσος όρος απόδοσης βέλτιστου ανα τρέξιμο= {average/10}')
-    print(f'Κατά μέσο όρο χρειάστηκαν {sum(gens_needed) / 10}')
+    print(f'Κατά μέσο όρο χρειάστηκαν {sum(gens_needed) / 10} γενιές')
 
     evolution = []
-    for i in range(num_gen):
-        evolution.append(sum(fitness_history[:, num_gen])/10)
+    for i in range(max(gens_needed)):
+        evolution = (np.mean(fitness_history, axis=0))
 
+    # επιστροφή stdout στην κονσόλα
+    f.close()
+    sys.stdout = sys.__stdout__
+    print(evolution)
     # PLOTS
     plt_evolution = plt.figure(1)
     title = f"Εξέλιξη πληθυσμού {num_indiv} ατόμων για c_rate = {crossrate} και m_rate = {mutrate}"
@@ -150,8 +154,6 @@ for mutrate in mut:
     np.save(f_fit, solution_scores)
 
     print(f'Clearing session....')
-    # επιστροφή stdout στην κονσόλα
-    f.close()
-    sys.stdout = sys.__stdout__
+
     tensorflow.keras.backend.clear_session()
     plt.close(1)
