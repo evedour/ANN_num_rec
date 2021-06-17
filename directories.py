@@ -183,13 +183,9 @@ def B2():
         folder_name = 'logs'
         folder = os.path.join(parent, folder_name)
         os.mkdir(folder)
-    if not (os.path.isdir('{}/logs/PART_B'.format(parent))):
-        folder_name = 'PART_B'
-        folder = os.path.join('{}/logs'.format(parent), folder_name)
-        os.mkdir(folder)
-    if not (os.path.isdir('{}/logs/PART_B/B2'.format(parent))):
+    if not (os.path.isdir('{}/logs/B2'.format(parent))):
         folder_name = 'B2'
-        folder = os.path.join('{}/logs/PART_B'.format(parent), folder_name)
+        folder = os.path.join('{}/logs'.format(parent), folder_name)
         os.mkdir(folder)
 
     # plots

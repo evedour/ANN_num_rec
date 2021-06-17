@@ -7,10 +7,11 @@ from tensorflow.keras.datasets import mnist
 from sklearn import preprocessing
 import functions
 import sys
-
+import time
 
 print(f'Tensorflow version:{tensorflow.__version__}')
 directories.B2()
+start_time = time.time()
 np.set_printoptions(threshold=np.inf)
 # GPU support
 physical_devices = tensorflow.config.experimental.list_physical_devices('GPU')
@@ -43,12 +44,12 @@ num_indiv = 20
 num_gen = 1000
 
 # πιθανότητα διασταύρωσης
-cross = [0.9, 0.1]
+# cross = [0.9, 0.1]
 crossrate = 0.6
 
 # πιθανοτητα μετάλλαξης
-# mut = [0.00, 0.01, 0.10]
-mutrate = 0.01
+mut = [0.00, 0.01, 0.10]
+# mutrate = 0.01
 population = np.ones((num_indiv, 784))
 
 # μετρησεις:
@@ -57,10 +58,10 @@ population = np.ones((num_indiv, 784))
 # best results gen = λίστα των καλύτερων σκορ κάθε γενιάς για κάθε τρέξιμο του αλγορίθμου (χρησιμοποιείται στο να ελέγχεται το ποσοστό βελτίωσης σε κάθε τρέξιμο)
 # fitness_history = κάθε γραμμή πίνακα αποθηκεύει ανα γενιά την καλύτερη απόδοση του αλγορίθμου στο αντίστοιχο τρέξιμο
 
-for crossrate in cross:
+for mutrate in mut:
 
     # άνοιγμα αρχειου αποθηκευσης
-    fname = "logs/PART_B/B2/results_{}_{}_{}.txt".format(num_indiv, crossrate, mutrate)
+    fname = "logs/B2/results_{}_{}_{}.txt".format(num_indiv, crossrate, mutrate)
     directories.filecheck(fname)
     f = open(fname, 'w')
     sys.stdout = f
@@ -123,6 +124,7 @@ for crossrate in cross:
 
     print(f'Αποτελέσματα για πληθυσμό {num_indiv} ατόμων, με crossover rate = {crossrate} και mutation rate = {mutrate}: Μέσος όρος απόδοσης βέλτιστου ανα τρέξιμο= {average/10}')
     print(f'Κατά μέσο όρο χρειάστηκαν {sum(gens_needed) / 10} γενιές')
+    print(f'This whole thing took me {(time.time() - start_time)} seconds or {(time.time() - start_time)/60} minutes')
 
     evolution = []
     for i in range(max(gens_needed)):
@@ -143,8 +145,8 @@ for crossrate in cross:
     plt_evolution.savefig('./plots/{}.png'.format(title), format='png')
 
     # SOLUTIONS
-    f_sol = "logs/PART_B/B2/solutions for {}_{}_{}.txt".format(num_indiv, crossrate, mutrate)
-    f_fit = "logs/PART_B/B2/solution scores for {}_{}_{}.txt".format(num_indiv, crossrate, mutrate)
+    f_sol = "logs/B2/solutions for {}_{}_{}.txt".format(num_indiv, crossrate, mutrate)
+    f_fit = "logs/B2/solution scores for {}_{}_{}.txt".format(num_indiv, crossrate, mutrate)
     directories.filecheck(f_sol)
     directories.filecheck(f_fit)
     # save solution for later use
