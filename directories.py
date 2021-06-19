@@ -193,3 +193,22 @@ def B2():
         folder_name = 'plots'
         folder = os.path.join(parent, folder_name)
         os.mkdir(folder)
+########################################################################################################################
+########################################################################################################################
+#B4
+def B4():
+    if not(os.path.isdir(f'{parent}/logs')):
+        print('creating log files...')
+        folder_name = 'logs'
+        folder = os.path.join(parent, folder_name)
+        os.mkdir(folder)
+    if not(os.path.isdir(f'{parent}/logs/B4')):
+        folder_name = 'B4'
+        folder = os.path.join(f'{parent}/logs', folder_name)
+        os.mkdir(folder)
+
+    # plots
+    if not(os.path.isdir(f'{parent}/plots')):
+        folder_name = 'plots'
+        folder = os.path.join(parent, folder_name)
+        os.mkdir(folder)
