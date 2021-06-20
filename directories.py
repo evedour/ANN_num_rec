@@ -187,6 +187,10 @@ def B2():
         folder_name = 'B2'
         folder = os.path.join('{}/logs'.format(parent), folder_name)
         os.mkdir(folder)
+    if not (os.path.isdir('{}/logs/B2/numpy'.format(parent))):
+        folder_name = 'numpy'
+        folder = os.path.join('{}/logs/B2'.format(parent), folder_name)
+        os.mkdir(folder)
 
     # plots
     if not(os.path.isdir('{}/plots'.format(parent))):

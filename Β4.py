@@ -19,7 +19,7 @@ import sys
 
 print(f'Tensorflow version:{tensorflow.__version__}')
 directories.B4()
-num_indiv = 100
+num_indiv = 10
 crossrate = 0.6
 mutrate = 0.00
 
@@ -48,7 +48,7 @@ y_test = to_categorical(y_test, 10)
 
 user_in = input('Run B4-A? y/n ')
 if user_in == 'y':
-    fname = 'evaluation for best mlp.txt'
+    fname = 'logs/B4/evaluation for best mlp.txt'
     directories.filecheck(fname)
     f = open(fname, 'w')
     sys.stdout = f
@@ -59,12 +59,12 @@ if user_in == 'y':
 
 user_in = input('Run B4-B? y/n ')
 if user_in == 'y':
-    x_train, x_test = butler.get_selected(x_train, x_test)
+    x_train, x_test = butler.get_selected(x_train, x_test, num_indiv, crossrate, mutrate)
     # model
     # Δημιουργία μοντέλου με χρήση του keras API
     model = Sequential()
     # Πρώτο κρυφό επίπεδο
-    model.add(Dense(794, input_shape=input_shape, activation='relu'))
+    model.add(Dense(794, input_shape=(784, ), activation='relu'))
     # Δεύτερο κρυφό επίπεδο
     model.add(Dense(50, activation='relu'))
     # Επίπεδο εξόδου
@@ -74,7 +74,7 @@ if user_in == 'y':
                   optimizer=tensorflow.keras.optimizers.SGD(learning_rate=0.1, momentum=0.6, decay=0.0, nesterov=False),
                   metrics=['accuracy'])
 
-    fname = 'results after retraining mlp.txt'
+    fname = 'logs/B4/results after retraining mlp.txt'
     f = open(fname, 'w')
     sys.stdout = f
 
@@ -96,7 +96,7 @@ if user_in == 'y':
         print(f' fold # {fold}, TRAIN: {train}, TEST: {test}')
 
         # fit μοντέλου
-        history = model.fit(xi_train, yi_train, epochs=ep, batch_size=200, verbose=1,
+        history = model.fit(xi_train, yi_train, epochs=500, batch_size=200, verbose=1,
                             validation_data=(xi_test, yi_test),
                             callbacks=[tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss', patience=2)])
 
@@ -117,7 +117,7 @@ if user_in == 'y':
     # plots
     # accuracy
     plot_acc = plt.figure(1)
-    title1 = 'Validation Accuracy, {} model r={}'.format(loss_fun, factor)
+    title1 = 'Validation Accuracy'
     plt.title(title1, loc='center', pad=None)
     plt.plot(aval)
     plt.ylabel('acc')
@@ -125,7 +125,7 @@ if user_in == 'y':
 
     # loss
     plot_loss = plt.figure(2)
-    title2 = 'Loss, {} model r={}'.format(loss_fun, factor)
+    title2 = 'Loss'
     plt.title(title2, loc='center', pad=None)
     # validation loss
     plt.plot(lval)
@@ -136,10 +136,10 @@ if user_in == 'y':
     plt.legend(['validation', 'train'], loc='upper left')
 
     # Save locally
-    directories.filecheck('./plots/A4/{}.png'.format(title1))
-    directories.filecheck('./plots/A4/{}.png'.format(title2))
-    plot_loss.savefig("./plots/A4/{}.png".format(title2), format='png')
-    plot_acc.savefig("./plots/A4/{}.png".format(title1), format='png')
+    directories.filecheck('./plots/{}.png'.format(title1))
+    directories.filecheck('./plots/{}.png'.format(title2))
+    plot_loss.savefig("./plots/{}.png".format(title2), format='png')
+    plot_acc.savefig("./plots/{}.png".format(title1), format='png')
 
     # εκτύπωση αποτελεσμάτων
     print(f'Συνολικά Αποτελέσματα - Loss {loss_sum / 5} - Accuracy {acc_sum / 5}')
