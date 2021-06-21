@@ -10,7 +10,7 @@ import sys
 
 
 def evaluate_best_mlp(num_indiv, crossrate, mutrate, x_test, y_test):
-    model = functions.my_model((784,))
+    model = functions.my_model((num_indiv,))
     solutions = np.load(f'logs/B2/numpy/solutions for {num_indiv}_{crossrate}_{mutrate}.npy')
     scores = np.load(f'logs/B2/numpy/solution scores for {num_indiv}_{crossrate}_{mutrate}.npy')
     best = solutions[np.where(scores == np.min(scores))]

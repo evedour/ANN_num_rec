@@ -5,6 +5,7 @@ import directories
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Masking
 from sklearn import preprocessing
 from math import exp
 
@@ -14,7 +15,8 @@ def my_model(input_shape):
     # Δημιουργία μοντέλου με χρήση του keras API
     model = Sequential()
     # Πρώτο κρυφό επίπεδο
-    model.add(Dense(794, input_shape=input_shape, activation='relu'))
+    model.add(Dense(794, input_shape=(784, ), activation='relu'))
+    model.add(Masking(mask_value=0.0, input_shape=input_shape))
     # Δεύτερο κρυφό επίπεδο
     model.add(Dense(50, activation='relu'))
     # Επίπεδο εξόδου
@@ -43,8 +45,8 @@ def fitness(population, x_test,  y_test):
         selected_test = select_features(individual, x_test)
         sze = np.where(individual == 1)[0]
         penalty = sze.shape[0]
-        print(f'Penalty={penalty}')
-        model = my_model((784, ))
+        print(f'Amount of nodes used = {penalty}')
+        model = my_model((penalty, ))
         results = model.evaluate(selected_test, y_test, verbose=1)
         # fitness func
         x = penalty/784
@@ -73,14 +75,24 @@ def select_parents(population, fit, k):
 
 def mate(par, crossrate):
     child = np.zeros(par.shape).astype(int)
-    for i in range(par.shape[0]):
+    for i in range(0, par.shape[0], 2):
         # crossover point
-        crosspoint = np.random.randint(1, len(par[i]) - 2)
+        crosspointA = np.random.randint(1, len(par[i])-2)
+        crosspoint = np.random.randint(1, len(par[i])-2)
+        while crosspoint == crosspointA:
+            crosspoint = np.random.randint(1, len(par[i]) - 2)
+        if crosspointA > crosspoint:
+            # το Α ειναι πιο πριν από το Β
+            crosspointB = crosspoint
+        else:
+            crosspointB = crosspointA
+            crosspointA = crosspoint
+
         if np.random.rand() < crossrate:
             # crossover is performed
-            child[i, 0:crosspoint] = par[i % par.shape[0], 0:crosspoint]
-            child[i, crosspoint:] = par[(i + 1) % par.shape[0], crosspoint:]
-
+            child[i, crosspointA:crosspointB] = par[i % par.shape[0], crosspointA:crosspointB]
+            child[i, :crosspointA] = par[(i+1) % par.shape[0], :crosspointA]
+            child[i, crosspointB:] = par[(i+1) % par.shape[0], crosspointB:]
     return child
 
 

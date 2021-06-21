@@ -59,12 +59,13 @@ if user_in == 'y':
 
 user_in = input('Run B4-B? y/n ')
 if user_in == 'y':
-    x_train, x_test = butler.get_selected(x_train, x_test, num_indiv, crossrate, mutrate)
+    x_train_selected, x_test_selected = butler.get_selected(x_train, x_test, num_indiv, crossrate, mutrate)
     # model
     # Δημιουργία μοντέλου με χρήση του keras API
     model = Sequential()
     # Πρώτο κρυφό επίπεδο
     model.add(Dense(794, input_shape=(784, ), activation='relu'))
+    model.add(Masking(mask_value=0.0, input_shape=(x_train_selected.shape[0], )))
     # Δεύτερο κρυφό επίπεδο
     model.add(Dense(50, activation='relu'))
     # Επίπεδο εξόδου
