@@ -91,7 +91,7 @@ if user_in == 'y':
 
     # 5-fold CV
     kfold = KFold(5, shuffle=True, random_state=1)
-    for train, test in kfold.split(x_train):
+    for train, test in kfold.split(x_train_selected):
         # διαχωρισμός train-test indexes
         xi_train, xi_test = x_train[train], x_train[test]
         yi_train, yi_test = y_train[train], y_train[test]
