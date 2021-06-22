@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Masking
 from tensorflow.keras.utils import to_categorical
 from sklearn.model_selection import KFold
 from tensorflow.keras.regularizers import l2
@@ -19,7 +20,7 @@ import sys
 
 print(f'Tensorflow version:{tensorflow.__version__}')
 directories.B4()
-num_indiv = 10
+num_indiv = 100
 crossrate = 0.6
 mutrate = 0.00
 
